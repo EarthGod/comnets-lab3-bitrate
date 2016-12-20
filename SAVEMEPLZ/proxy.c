@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 #include "socket.h"
 #include "macro.h"
+#include "pool.h"
 // define configuration
 // refrence from lab3cp1ref.py
 #define ARGCNT 7
@@ -23,6 +24,7 @@ typedef struct conf_struct{
 }conf_type;
 static conf_type conf;
 static int sock = -1;
+
 int main(int argc, char** argv){
 	// parsing configuration from argv
 	if (argc != ARGCNT + 1 && argc != ARGCNT){
@@ -40,7 +42,7 @@ int main(int argc, char** argv){
 
 	//open listener socket 
 	// TODO: IMPLEMENT CONNECTION POOL!!!!!!!!
-	sock = open_listener_socket(conf.port_listen, 256); // 256 -> MAXCONN
+	sock = open_listener_socket(conf.port_listen, MAXCONN);
 	if (sock < 0){
 		fprintf(stderr, "open socket error!\n");
 		return -1;

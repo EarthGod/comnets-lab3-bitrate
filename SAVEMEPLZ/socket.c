@@ -4,7 +4,6 @@
  * @author Li Yanhao <1400012849@pku.edu.cn>
  */
 
-#include "macro.h"
 #include "socket.h"
 
 int open_listener_socket(int port, int max_conns){

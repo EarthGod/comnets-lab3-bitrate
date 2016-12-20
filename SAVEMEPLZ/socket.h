@@ -13,6 +13,7 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <string.h>
+#include "macro.h"
 
 /**
  * @brief: Open a listener socket on a certain port.
