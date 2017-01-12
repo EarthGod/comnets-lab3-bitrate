@@ -1,0 +1,151 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BUFSIZE	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	5;"	kind:macro	line:5	language:C	file:
+FLAG_LIST	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	24;"	kind:macro	line:24	language:C	file:
+FLAG_VIDEO	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	23;"	kind:macro	line:23	language:C	file:
+OSPF_init	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	27;"	kind:function	line:27	language:C	signature:(char *servers, char *LSAs, int rr_flag)
+TYPE_F4F	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	27;"	kind:macro	line:27	language:C	file:
+TYPE_MSC	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	28;"	kind:macro	line:28	language:C	file:
+TYPE_XML	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	26;"	kind:macro	line:26	language:C	file:
+VIDEO_HOST	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	42;"	kind:variable	line:42	language:C	file:
+VIDEO_PORT	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	43;"	kind:variable	line:43	language:C	file:
+a	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mtest.c	8;"	kind:member	line:8	language:C	struct:test_s	file:	access:public
+accept_encoding_hdr	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	38;"	kind:variable	line:38	language:C	file:
+accept_hdr	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	37;"	kind:variable	line:37	language:C	file:
+add_client	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\pool.c	144;"	kind:function	line:144	language:C	signature:(int conn_sock, uint32_t addr)
+add_conn	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\conn.c	60;"	kind:function	line:60	language:C	signature:(int clit_idx, int serv_idx)
+add_new_neighbor	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	213;"	kind:function	line:213	language:C	file:	signature:(node_t* node, const MList* neighbor)
+add_new_node	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	198;"	kind:function	line:198	language:C	file:	signature:(const char* name)
+add_server	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\pool.c	178;"	kind:function	line:178	language:C	signature:(int sock, uint32_t addr)
+add_thru	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\conn.c	180;"	kind:function	line:180	language:C	signature:(uint32_t clit_addr, uint32_t serv_addr)
+ask_for_nolist	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	895;"	kind:function	line:895	language:C	signature:(int serv_fd, int clit_idx, int close)
+bitrates	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	32;"	kind:variable	line:32	language:C
+buf_len	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	158;"	kind:function	line:158	language:C	file:	signature:(char* buf)
+clean_state	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\pool.c	316;"	kind:function	line:316	language:C	signature:(pool_t *p, int listen_sock)
+client2server	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	207;"	kind:function	line:207	language:C	signature:(int clit_idx)
+client_get_conn	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\conn.c	17;"	kind:function	line:17	language:C	signature:(int fd, uint32_t addr)
+clienterror	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	843;"	kind:function	line:843	language:C	signature:(int fd, char *cause, char *errnum, char *shortmsg, char *longmsg)
+clits	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	22;"	kind:variable	line:22	language:C
+close_clit	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\pool.c	275;"	kind:function	line:275	language:C	signature:(int clit_idx)
+close_conn	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\conn.c	114;"	kind:function	line:114	language:C	signature:(int conn_idx)
+close_serv	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\pool.c	286;"	kind:function	line:286	language:C	signature:(int serv_idx)
+close_socket	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\pool.c	301;"	kind:function	line:301	language:C	signature:(int sock)
+connection_hdr	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	39;"	kind:variable	line:39	language:C	file:
+dns	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mydns.c	4;"	kind:variable	line:4	language:C
+dot2len	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mydns.c	140;"	kind:function	line:140	language:C	signature:(char* name, const char* const_src)
+endsWith	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\media.c	13;"	kind:function	line:13	language:C	signature:(char* base, char* str)
+find_entry_by_name	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	232;"	kind:function	line:232	language:C	file:	signature:(const void* a, const void* b)
+find_node_by_name	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	224;"	kind:function	line:224	language:C	file:	signature:(const void* a, const void* b)
+flog	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	11;"	kind:variable	line:11	language:C	file:
+freeMyAddrinfo	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mydns.c	60;"	kind:function	line:60	language:C	signature:(struct addrinfo *addr)
+free_pkt	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mydns.c	261;"	kind:function	line:261	language:C	signature:(data_packet_t* pkt)
+gen_err	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	166;"	kind:function	line:166	language:C	signature:(char* origin)
+gen_res	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	174;"	kind:function	line:174	language:C	signature:(char* req_buf, char* res_buf, char* dest_addr)
+get_client	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\pool.c	216;"	kind:function	line:216	language:C	signature:(uint32_t addr)
+get_elapsed	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\timer.c	25;"	kind:function	line:25	language:C	signature:(struct timeval* start, struct timeval* end)
+get_server	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\pool.c	228;"	kind:function	line:228	language:C	signature:(int sock)
+get_thru_by_addrs	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\conn.c	165;"	kind:function	line:165	language:C	signature:(uint32_t clit_addr, uint32_t serv_addr)
+get_time_diff	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\timer.c	9;"	kind:function	line:9	language:C	signature:(struct timeval* start)
+hostToNet	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mydns.c	210;"	kind:function	line:210	language:C	signature:(data_packet_t* pkt)
+init_mydns	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mydns.c	17;"	kind:function	line:17	language:C	signature:(const char *dns_ip, unsigned int dns_port, const char *local_ip)
+init_pool	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\pool.c	16;"	kind:function	line:16	language:C	signature:(int listen_sock, pool_t *p, char** argv)
+init_ref	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	88;"	kind:function	line:88	language:C
+init_serv_list	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\media.c	21;"	kind:function	line:21	language:C
+init_udp	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	94;"	kind:function	line:94	language:C	signature:(char* ip, int port, fd_set* read_nrdy)
+io_recvline_block	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\io.c	151;"	kind:function	line:151	language:C	signature:(int fd, void *usrbuf, size_t maxlen)
+io_recvlineb	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\io.c	114;"	kind:function	line:114	language:C	signature:(int fd, void *usrbuf, size_t maxlen)
+io_recvn	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\io.c	51;"	kind:function	line:51	language:C	signature:(int fd, char *buf, size_t n)
+io_recvn_block	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\io.c	86;"	kind:function	line:86	language:C	signature:(int fd, char *buf, int n)
+io_sendn	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\io.c	19;"	kind:function	line:19	language:C	signature:(int fd, const char *ubuf, size_t n)
+isVideo	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\media.c	124;"	kind:function	line:124	language:C	signature:(char *path)
+loggin	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\log.c	9;"	kind:function	line:9	language:C	signature:(conn_t* conn, thruputs_t* thru)
+main	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\dnstest.c	13;"	kind:function	line:13	language:C
+main	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mtest.c	13;"	kind:function	line:13	language:C	signature:(int argc, char** argv)
+main	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	17;"	kind:function	line:17	language:C	signature:(int argc, char* argv[])
+main	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	61;"	kind:function	line:61	language:C	signature:(int argc, char **argv)
+main	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\test.c	11;"	kind:function	line:11	language:C
+make_query_pkt	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mydns.c	66;"	kind:function	line:66	language:C	signature:(const char* node)
+mlist_append	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	14;"	kind:function	line:14	language:C	signature:(MList* list, void* data)
+mlist_delete_link	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	237;"	kind:function	line:237	language:C	signature:(MList* list, MList* link)
+mlist_find	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	99;"	kind:function	line:99	language:C	signature:(MList* list, const void* data)
+mlist_find_custom	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	109;"	kind:function	line:109	language:C	signature:(MList* list, const void* data, MCompareFunc func)
+mlist_foreach	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	152;"	kind:function	line:152	language:C	signature:(MList* list, MFunc func, void* func_data)
+mlist_free	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	247;"	kind:function	line:247	language:C	signature:(MList *list)
+mlist_free_full	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	258;"	kind:function	line:258	language:C	signature:(MList *list)
+mlist_get	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	85;"	kind:function	line:85	language:C	signature:(MList *list, unsigned int n)
+mlist_getdata	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	92;"	kind:function	line:92	language:C	signature:(MList* list, unsigned int n)
+mlist_index	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	121;"	kind:function	line:121	language:C	signature:(MList* list, void* data)
+mlist_insert	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	61;"	kind:function	line:61	language:C	signature:(MList* list, void* data, int position)
+mlist_last	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	133;"	kind:function	line:133	language:C	signature:(MList *list)
+mlist_length	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	142;"	kind:function	line:142	language:C	signature:(MList *list)
+mlist_new	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	10;"	kind:function	line:10	language:C	signature:(void)
+mlist_prepend	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	34;"	kind:function	line:34	language:C	signature:(MList* list, void* data)
+mlist_remove	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	164;"	kind:function	line:164	language:C	signature:(MList *list, void* data)
+mlist_remove_all	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	182;"	kind:function	line:182	language:C	signature:(MList *list, void* data)
+mlist_remove_link	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mlist.c	208;"	kind:function	line:208	language:C	signature:(MList *list, MList *link)
+modi_path	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\media.c	93;"	kind:function	line:93	language:C	signature:(char* path, int thruput, conn_t* conn)
+mqueue_find	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mqueue.c	38;"	kind:function	line:38	language:C	signature:(MQueue* queue, const void* data)
+mqueue_find_custom	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mqueue.c	43;"	kind:function	line:43	language:C	signature:(MQueue* queue, const void* data, MCompareFunc func)
+mqueue_foreach	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mqueue.c	23;"	kind:function	line:23	language:C	signature:(MQueue* queue, MFunc func, void* func_data)
+mqueue_get_length	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mqueue.c	19;"	kind:function	line:19	language:C	signature:(MQueue* queue)
+mqueue_is_empty	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mqueue.c	15;"	kind:function	line:15	language:C	signature:(MQueue* queue)
+mqueue_new	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mqueue.c	10;"	kind:function	line:10	language:C	signature:(void)
+mqueue_pop_head	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mqueue.c	71;"	kind:function	line:71	language:C	signature:(MQueue *queue)
+mqueue_pop_tail	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mqueue.c	92;"	kind:function	line:92	language:C	signature:(MQueue *queue)
+mqueue_push_head	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mqueue.c	51;"	kind:function	line:51	language:C	signature:(MQueue* queue, void* data)
+mqueue_push_tail	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mqueue.c	60;"	kind:function	line:60	language:C	signature:(MQueue* queue, void* data)
+netToHost	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mydns.c	238;"	kind:function	line:238	language:C	signature:(data_packet_t* pkt)
+nodes	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	23;"	kind:variable	line:23	language:C
+nolist_buf	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	33;"	kind:variable	line:33	language:C
+ns_output_log	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	227;"	kind:function	line:227	language:C	file:	signature:(char* clit_ip, char* host_name, char* res_ip)
+ns_output_log_init	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	222;"	kind:function	line:222	language:C	file:	signature:(char* log_file)
+open_listen_socket	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\pool.c	56;"	kind:function	line:56	language:C	signature:(int port)
+open_server_socket	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\pool.c	92;"	kind:function	line:92	language:C	signature:(char *fake_ip, char *www_ip, int port)
+parse	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	206;"	kind:function	line:206	language:C	signature:(char* buf)
+getBitrate	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\parse_xml.c	52;"	kind:function	line:52	language:C	signature:(xmlDocPtr doc, xmlNodePtr cur)
+parse_LSA	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	146;"	kind:function	line:146	language:C	file:	signature:(char *LSAs)
+parse_res	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mydns.c	111;"	kind:function	line:111	language:C	signature:(char* req_buf, char* res_buf, struct addrinfo* tmp, int length)
+parse_servs	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	126;"	kind:function	line:126	language:C	file:	signature:(char *servers)
+parse_uri	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	542;"	kind:function	line:542	language:C	signature:(char *uri, char *host, int *port, char *path)
+parse_xml	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\parse_xml.c	3;"	kind:function	line:3	language:C	signature:(char* xml_buf, int length)
+pktToBuf	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mydns.c	166;"	kind:function	line:166	language:C	signature:(char* buf, data_packet_t* pkt)
+pool	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	31;"	kind:variable	line:31	language:C
+print_table	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	61;"	kind:function	line:61	language:C	file:	signature:(void* data, void* func_data)
+print_test	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mtest.c	28;"	kind:function	line:28	language:C	signature:(void* data, void* func_data)
+print_topo	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	67;"	kind:function	line:67	language:C	file:	signature:(void* data, void* func_data)
+process_list	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	872;"	kind:function	line:872	language:C	signature:(int serv_fd, int length)
+pxy_connection_hdr	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	40;"	kind:variable	line:40	language:C	file:
+query_count	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	25;"	kind:variable	line:25	language:C
+read_requesthdrs	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	650;"	kind:function	line:650	language:C	signature:(int clit_fd, char *host, int* port)
+read_responeshdrs	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	729;"	kind:function	line:729	language:C	signature:(int serv_fd, response_t* res)
+ref_host	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	10;"	kind:variable	line:10	language:C	file:
+ref_pkt	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	8;"	kind:variable	line:8	language:C	file:
+ref_pkt_len	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	9;"	kind:variable	line:9	language:C	file:
+resolve	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mydns.c	301;"	kind:function	line:301	language:C	signature:(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res)
+route	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	45;"	kind:function	line:45	language:C	signature:(char* clit_name, int rr_flag)
+routing_table	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	24;"	kind:variable	line:24	language:C
+serv_add	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\media.c	27;"	kind:function	line:27	language:C	signature:(struct sockaddr_in *serv)
+serv_del	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\media.c	46;"	kind:function	line:46	language:C	signature:(struct sockaddr_in *serv)
+serv_get	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\media.c	78;"	kind:function	line:78	language:C	signature:(struct sockaddr_in *serv)
+serv_list	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\media.c	4;"	kind:variable	line:4	language:C
+serve	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	121;"	kind:function	line:121	language:C	signature:(int fd, int rr_flag)
+serve_clients	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	185;"	kind:function	line:185	language:C
+serve_servers	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	169;"	kind:function	line:169	language:C
+server2client	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	384;"	kind:function	line:384	language:C	signature:(int serv_idx)
+server_get_conn	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\conn.c	39;"	kind:function	line:39	language:C	signature:(int fd)
+servs	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	21;"	kind:variable	line:21	language:C
+shortest_path	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	81;"	kind:function	line:81	language:C	file:	signature:(void* data, void* func_data)
+startsWith	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	241;"	kind:function	line:241	language:C	file:	signature:(char* base, char* str)
+test_s	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\mlib\mtest.c	7;"	kind:struct	line:7	language:C	file:
+unmark	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\ospf.c	120;"	kind:function	line:120	language:C	file:	signature:(void* data, void* func_data)
+update_client	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\pool.c	241;"	kind:function	line:241	language:C	signature:(int sock, uint32_t addr)
+update_conn	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\conn.c	93;"	kind:function	line:93	language:C	signature:(int clit_idx, int serv_idx)
+update_server	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\pool.c	259;"	kind:function	line:259	language:C	signature:(int sock, uint32_t addr)
+update_thruput	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\conn.c	140;"	kind:function	line:140	language:C	signature:(int sum, conn_t* conn, thruputs_t* thru)
+usage	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\nameserver.c	216;"	kind:function	line:216	language:C
+usage	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	866;"	kind:function	line:866	language:C
+user_agent_hdr	E:\¿Î³Ì\ÍøÂçÊµÏ°\work\sample2\VideoCDN-master\src\proxy.c	36;"	kind:variable	line:36	language:C	file:
