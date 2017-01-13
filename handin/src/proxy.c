@@ -370,7 +370,7 @@ void server2client(int serv_idx)
 
     read_responeshdrs(server_fd, &res);
     fprintf(stderr, "server2client: RES TPYE: %d\n", res.type);
-    if (res.length == 0 || res.type == 0) 
+    if (res.length == 0) 
 	{
         fprintf(stderr, "in response, length == 0 or type = 0\n");
         close_conn(conn_idx);
@@ -727,7 +727,7 @@ void clienterror(int fd, char *cause, char *errnum, char *shortmsg, char *longms
     sprintf(body, "%s<body bgcolor=""ffffff"">\r\n", body);
     sprintf(body, "%s%s: %s\r\n", body, errnum, shortmsg);
     sprintf(body, "%s<p>%s: %s\r\n", body, longmsg, cause);
-    sprintf(body, "%s<hr><em>The Ming proxy server</em>\r\n", body);
+    sprintf(body, "%s<hr><em> Proxy </em>\r\n", body);
 
     /* Print the HTTP response */
     sprintf(buf, "HTTP/1.0 %s %s\r\n", errnum, shortmsg);
