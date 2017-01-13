@@ -77,7 +77,8 @@ ssize_t io_recvn_block(int fd, char *buf, int n)
 	int nread;
 	size_t nleft = n;
 
-	while (1) {
+	while (1) 
+	{
 		nread = recv(fd, buf + res, nleft, 0);
 		if (nread == -1 && (errno == EAGAIN || errno == EWOULDBLOCK)) 
 		{
@@ -105,16 +106,16 @@ ssize_t io_recvlineb(int fd, void *usrbuf, size_t maxlen)
 	{ 
 		if ((rc = recv(fd, &c, 1, 0)) == 1) 
 		{
-		    *bufp++ = c;
-		    if (c == '\n')
+			*bufp++ = c;
+			if (c == '\n')
 			break;
 		} 
 		else if (rc == 0) 
 		{
 			DPRINTF("recv hdr = 0!\n");	
-		    if (n == 1)
+			if (n == 1)
 				return 0; /* EOF, no data read */
-		    else
+			else
 				return n; /* EOF, some data was read */
 		} 
 		else 
@@ -125,9 +126,9 @@ ssize_t io_recvlineb(int fd, void *usrbuf, size_t maxlen)
 				break;
 			}
 			DPRINTF("recv error on %s\n", strerror(errno));
-		    return -1;	  /* error */
+			return -1;	  /* error */
 		}
-    }
+	}
     *bufp = 0;
     return n;
 }
@@ -143,22 +144,22 @@ ssize_t io_recvline_block(int fd, void *usrbuf, size_t maxlen)
 		if ((rc = recv(fd, &c, 1, 0)) == 1) 
 		{
 			*bufp++ = c;
-		    if (c == '\n')
+			if (c == '\n')
 			break;
 		} 
 		else if (rc == 0) 
 		{
 			DPRINTF("recv hdr = 0!\n");	
-		    if (n == 1) 
+			if (n == 1) 
 			{
-		    	DPRINTF("recv() return 0, with no data read\n");
+				DPRINTF("recv() return 0, with no data read\n");
 				return 0; /* EOF, no data read */
-		    }
-		    else
+			}
+			else
 			{
-		    	DPRINTF("recv() return 0, with some data read\n");
+				DPRINTF("recv() return 0, with some data read\n");
 				return n; /* EOF, some data was read */
-		    }
+			}
 		} 
 		else 
 		{
@@ -168,9 +169,9 @@ ssize_t io_recvline_block(int fd, void *usrbuf, size_t maxlen)
 				continue;
 			}
 			DPRINTF("recv error on %s\n", strerror(errno));
-		    return -1;	  /* error */
+			return -1;	  /* error */
 		}
-    }
-    *bufp = 0;
+	}
+	*bufp = 0;
     return n;
 }

@@ -4,6 +4,6 @@
 #include <sys/time.h>
 #include <stdlib.h>
 
-double get_time_diff(struct timeval* start);
-double get_elapsed(struct timeval* start, struct timeval* end);
+double get_time_since(struct timeval* start);
+double get_diff(struct timeval* start, struct timeval* end);
 #endif

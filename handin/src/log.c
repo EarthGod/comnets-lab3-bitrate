@@ -10,8 +10,8 @@ void loggin(conn_t* conn, thruputs_t* thru)
 {
 	time_t since_epoch;
 	since_epoch = time(NULL);
-	//int elapsed = (int)get_time_diff(&(pool.start));
-	double secs = get_elapsed(&(conn->start),&(conn->end));
+	//int elapsed = (int)get_time_since(&(pool.start));
+	double secs = get_diff(&(conn->start),&(conn->end));
 	FILE* logfile = pool.log_file;
 	server_t* server = pool.server_l[conn->serv_idx];
 	

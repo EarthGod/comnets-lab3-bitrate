@@ -137,7 +137,7 @@ int update_thruput(int sum, conn_t* conn, thruputs_t* thru)
 	double new_thruput;
 	float alpha = pool.alpha;
 	
-	elapsed = get_elapsed(&(conn->start),&(conn->end));
+	elapsed = get_diff(&(conn->start),&(conn->end));
 	DPRINTF("elapsed = %lf", elapsed);
 	new_thruput = ((sum / 1000 * 8)) / elapsed;
 	conn->t_put = (int)new_thruput;
