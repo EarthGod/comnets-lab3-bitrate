@@ -6,16 +6,16 @@
 
 ssize_t io_sendn(int fd, const char *ubuf, size_t n) 
 {
-    size_t nleft = n;
-    ssize_t nsend;
-    const char *buf = ubuf;
+	size_t nleft = n;
+	ssize_t nsend;
+	const char *buf = ubuf;
 
-    while (nleft > 0) 
+	while (nleft > 0) 
 	{
 		if ((nsend = send(fd, buf, nleft, 0)) <= 0) 
 		{
-			if (errno == EINTR)  /* interrupted by sig handler return */
-				nsend = 0;    /* and call send() again */
+			if (errno == EINTR)  // interrupted by sig handler return
+				nsend = 0;    // and call send() again
 			else if (errno == EPIPE) 
 			{
 				DPRINTF("EPIPE handled\n");
@@ -27,14 +27,15 @@ ssize_t io_sendn(int fd, const char *ubuf, size_t n)
 			} 
 			else 
 			{
+				/* errorno set by send() */
 				DPRINTF("send error on %s\n", strerror(errno));
-				return -1;       /* errorno set by send() */
+				return -1;
 			}
 		}
 		nleft -= nsend;
 		buf += nsend;
-    }
-    return n;
+	}
+	return n;
 }
 
 ssize_t io_recvn(int fd, char *buf, size_t n) 
@@ -80,11 +81,8 @@ ssize_t io_recvn_block(int fd, char *buf, int n)
 	while (1) 
 	{
 		nread = recv(fd, buf + res, nleft, 0);
-		if (nread == -1 && (errno == EAGAIN || errno == EWOULDBLOCK)) 
-		{
-			//DPRINTF("BLOCK!\n");
+		if (nread == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
 			continue;
-		} 
 		else if (nread == -1) 
 		{
 			DPRINTF("BLock recv error on %s\n", strerror(errno));
@@ -99,10 +97,10 @@ ssize_t io_recvn_block(int fd, char *buf, int n)
 
 ssize_t io_recvlineb(int fd, void *usrbuf, size_t maxlen) 
 {
-    int n, rc;
-    char c, *bufp = usrbuf;
+	int n, rc;
+	char c, *bufp = usrbuf;
 
-    for (n = 1; n < maxlen; n++) 
+	for (n = 1; n < maxlen; n++) 
 	{ 
 		if ((rc = recv(fd, &c, 1, 0)) == 1) 
 		{
@@ -125,21 +123,22 @@ ssize_t io_recvlineb(int fd, void *usrbuf, size_t maxlen)
 				DPRINTF("read entire buffer once");
 				break;
 			}
+			/* error */
 			DPRINTF("recv error on %s\n", strerror(errno));
-			return -1;	  /* error */
+			return -1;
 		}
 	}
-    *bufp = 0;
-    return n;
+	*bufp = 0;
+	return n;
 }
 
 
 ssize_t io_recvline_block(int fd, void *usrbuf, size_t maxlen) 
 {
-    int n, rc;
-    char c, *bufp = usrbuf;
+	int n, rc;
+	char c, *bufp = usrbuf;
 
-    for (n = 1; n < maxlen; n++) 
+	for (n = 1; n < maxlen; n++) 
 	{ 
 		if ((rc = recv(fd, &c, 1, 0)) == 1) 
 		{
@@ -168,10 +167,11 @@ ssize_t io_recvline_block(int fd, void *usrbuf, size_t maxlen)
 				DPRINTF("read entire buffer once\n");
 				continue;
 			}
+			/* error */
 			DPRINTF("recv error on %s\n", strerror(errno));
-			return -1;	  /* error */
+			return -1;
 		}
 	}
 	*bufp = 0;
-    return n;
+	return n;
 }

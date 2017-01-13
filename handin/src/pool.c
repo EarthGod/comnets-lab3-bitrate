@@ -1,9 +1,6 @@
 #include "pool.h"
 
-
-
 extern pool_t pool;
-
 
 void init_pool(int listen_sock, pool_t *p, char** argv) 
 {
@@ -29,7 +26,7 @@ void init_pool(int listen_sock, pool_t *p, char** argv)
         exit(-1);
     }
     pool.fake_ip = argv[4];
-    sscanf(argv[2],"%f",&(pool.alpha));
+    sscanf(argv[2], "%f", &(pool.alpha));
     pool.cur_conn = 0;
     pool.cur_client = 0;
     pool.cur_server = 0;
@@ -95,12 +92,8 @@ int open_server_socket(char *fake_ip, char *www_ip, int port)
 
     /* Create the socket descriptor */
     if ((serverfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
-	{
         return -1;
-    }
 
-    //fcntl(serverfd, F_SETFL, O_NONBLOCK);
-    
     memset(&fake_addr, '0', sizeof(fake_addr)); 
     fake_addr.sin_family = AF_INET;
     inet_pton(AF_INET, fake_ip, &(fake_addr.sin_addr));
@@ -125,6 +118,7 @@ int open_server_socket(char *fake_ip, char *www_ip, int port)
         DPRINTF("Connect error!\n");
         return -1;
     }
+
     /* Clean up */
     if (result)
         free(result);
@@ -160,7 +154,6 @@ int add_client(int conn_sock, uint32_t addr)
             return i;
         }
 
-
     /* failed to add new server */
     return -1;
 }
@@ -173,9 +166,8 @@ int add_server(int sock, uint32_t addr)
     server_t** serv_l = pool.server_l;
     int i = 0;
 
-    for(; i < FD_SETSIZE;i++) 
+    for(; i < FD_SETSIZE; i++) 
 	{
-
         if (serv_l[i] == NULL) 
 		{
             new_server = (server_t*)malloc(sizeof(server_t));
@@ -201,11 +193,6 @@ int add_server(int sock, uint32_t addr)
     return -1;
 }
 
-
-
-
-
-
 int get_client(uint32_t addr) 
 {
     int i = 0;
@@ -224,7 +211,7 @@ int get_server(int sock)
 {
     int i = 0;
     server_t** cur_s = pool.server_l;
-    for( i = 0; i < FD_SETSIZE; i++) 
+    for(i = 0; i < FD_SETSIZE; i++) 
 	{
         if (cur_s[i] == NULL)
             continue;
@@ -237,9 +224,9 @@ int get_server(int sock)
 
 int update_client(int sock, uint32_t addr) 
 {
-        int i = 0;
+    int i = 0;
     client_t** cur_c = pool.client_l; 
-    for( i = 0; i < FD_SETSIZE; i++) 
+    for(i = 0; i < FD_SETSIZE; i++) 
 	{
         if (cur_c[i] == NULL)
             continue;
@@ -251,6 +238,7 @@ int update_client(int sock, uint32_t addr)
             return 0;
         }
     }
+
     // should never reach here!
     DPRINTF("wants to update, but no client found!\n");
     return -1;   
@@ -296,14 +284,13 @@ void close_serv(int serv_idx)
     FD_CLR(server->fd, &(pool.write_nrdy));
     free(server);
     GET_SERV_BY_IDX(serv_idx) = NULL;
-    pool.cur_server--;    
+    pool.cur_server--;
 }
 
 
 int close_socket(int sock) 
 {
     DPRINTF("Close sock %d\n", sock);
-    //log_write_string("Close sock %d\n", sock);
     if (close(sock)) 
 	{
         DPRINTF("Failed closing socket.\n");
@@ -312,7 +299,4 @@ int close_socket(int sock)
     return 0;
 }
 
-void clean_state(pool_t *p, int listen_sock) 
-{
-    return;
-}
+void clean_state(pool_t *p, int listen_sock) {return;}

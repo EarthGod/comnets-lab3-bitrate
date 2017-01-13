@@ -11,13 +11,12 @@ bit_t* parse_xml(char* xml_buf, int length)
 	bit_t* temp = NULL;
 
 	doc = xmlReadMemory(xml_buf, length, "noname.xml", NULL, 0);
+	// failed to parse xml file, then return
 	if (doc == NULL) 
-	{
-		// failed to parse xml file
 		return NULL;
-	}
 
 	fprintf(stderr, "start parsing!\n");
+
 	/* get root node */
 	cur = xmlDocGetRootElement(doc);
 	cur = cur -> xmlChildrenNode;
@@ -62,10 +61,11 @@ int getBitrate(xmlDocPtr doc, xmlNodePtr cur)
 	xmlChar* birate;
 	int bit = 0;
 	birate = xmlGetProp(cur,"bitrate");
+
 	if (birate == NULL)
 		return -1;
+
 	bit = atoi((char*)birate);
-	//fprintf(stderr, "bitrate:%d\n",bit);
 	xmlFree(birate);
 	return bit;
 }

@@ -3,30 +3,24 @@
 #include "media.h"
 #include "timer.h"
 
-
-
 extern pool_t pool;
-
-
-
 
 int client_get_conn(int fd, uint32_t addr) 
 {
 	int i = 0;
 	conn_t** conns = pool.conn_l;
-	server_t *server;
-	client_t *client;
-	for (i = 0; i<= pool.max_conn_idx; i++) 
+	server_t* server;
+	client_t* client;
+	for (i = 0; i <= pool.max_conn_idx; i++) 
 	{
 		if (conns[i] == NULL) 
 			continue;
 		server = GET_SERV_BY_IDX(conns[i]->serv_idx);
 		client = GET_CLIT_BY_IDX(conns[i]->clit_idx);
-		if(client->fd == fd && server->addr == addr) 
-		{
-			return i;
-		}
+		if(server->addr == addr && client->fd == fd) 
+			return i; // found then return 
 	}
+	//not found
 	return -1;
 }
 
@@ -35,26 +29,30 @@ int server_get_conn(int fd)
 {
 	int i = 0;
 	conn_t** conns = pool.conn_l;
-	server_t *server;
+	server_t* server;
 
 	for (i = 0; i <= pool.max_conn_idx; i++) 
 	{
 		if (conns[i] == NULL)
 			continue;
+
 		server = GET_SERV_BY_IDX(conns[i]->serv_idx);
 		if(server->fd == fd) 
-			return i;
+			return i; // found then return 
 	}
+	//not found
 	return -1;
 }
 
 
 int add_conn(int clit_idx, int serv_idx) {
+	int i = 0;
+
 	conn_t* new_conn;
 	conn_t** conn = pool.conn_l;
-	int i = 0;
-	server_t *serv = GET_SERV_BY_IDX(serv_idx);
-	client_t *clit = GET_CLIT_BY_IDX(clit_idx);
+
+	server_t* serv = GET_SERV_BY_IDX(serv_idx);
+	client_t* clit = GET_CLIT_BY_IDX(clit_idx);
 	serv->num_clit++;
 	clit->num_serv++;
 
@@ -86,27 +84,27 @@ int add_conn(int clit_idx, int serv_idx) {
 
 int update_conn(int clit_idx, int serv_idx) 
 {
-    int i = 0 ;
-    conn_t** conn_l = pool.conn_l;
-    for ( i = 0 ; i < FD_SETSIZE; i++) 
+	int i = 0;
+	conn_t** conn_l = pool.conn_l;
+	for (i = 0; i < FD_SETSIZE; i++) 
 	{
-        if (conn_l[i] == NULL)
-            continue;
-        if (conn_l[i]->serv_idx == serv_idx 
-            && conn_l[i]->clit_idx == clit_idx) 
-            conn_l[i]->alive = 1;
-    }
-    DPRINTF("wants to update, but no connection found!\n");
-    return -1;
+		if (conn_l[i] == NULL)
+			continue;
+		if (conn_l[i]->serv_idx == serv_idx && conn_l[i]->clit_idx == clit_idx) 
+			conn_l[i]->alive = 1;
+	}
+	//NO CONNECTION FOUND
+	DPRINTF("wants to update, but no connection found!\n");
+	return -1;
 }
 
 
 void close_conn(int conn_idx) 
 {
-    //to do
-    conn_t* del_conn= GET_CONN_BY_IDX(conn_idx);
-    int serv_idx = del_conn->serv_idx;
-    int clit_idx = del_conn->clit_idx;
+	//to do
+	conn_t* del_conn= GET_CONN_BY_IDX(conn_idx);
+	int serv_idx = del_conn->serv_idx;
+	int clit_idx = del_conn->clit_idx;
    	server_t *serv = GET_SERV_BY_IDX(serv_idx);
 	client_t *clit = GET_CLIT_BY_IDX(clit_idx);
 	assert(serv->num_clit > 0);
@@ -115,15 +113,15 @@ void close_conn(int conn_idx)
 	clit->num_serv--;
 
 	if (serv->num_clit == 0)
-    	close_serv(del_conn->serv_idx);
-    if (clit->num_serv == 0)
-    	close_clit(del_conn->clit_idx);
+		close_serv(del_conn->serv_idx);
+	if (clit->num_serv == 0)
+		close_clit(del_conn->clit_idx);
 
-    free(del_conn);
-    pool.conn_l[conn_idx] = NULL;
-    pool.cur_conn--;
+	free(del_conn);
+	pool.conn_l[conn_idx] = NULL;
+	pool.cur_conn--;
 
-    //del_conn->alive = 0;
+	//del_conn->alive = 0;
 }; 
 
 
@@ -132,28 +130,27 @@ int update_thruput(int sum, conn_t* conn, thruputs_t* thru)
 {
 	assert(sum > 0);
 	int curr_thruput;
-	double elapsed = 0.0;
-
-	double new_thruput;
+	double new_thruput, elapsed = 0.0;
 	float alpha = pool.alpha;
 	
 	elapsed = get_diff(&(conn->start),&(conn->end));
 	DPRINTF("elapsed = %lf", elapsed);
 	new_thruput = ((sum / 1000 * 8)) / elapsed;
 	conn->t_put = (int)new_thruput;
-
 	
 	curr_thruput = thru->avg_put;
-	DPRINTF(" Old:%d, New:%f, alpha:%f\n", curr_thruput, new_thruput, alpha);
-	if (curr_thruput != 0) 
+	DPRINTF(" Old: %d, New: %f, alpha: %f\n", curr_thruput, new_thruput, alpha);
+
+	//calculating new throughput
+	if (curr_thruput != 0)
 		new_thruput = (alpha * new_thruput + (1.0 - alpha) * curr_thruput);
 	
 	thru->avg_put = (int)new_thruput;
-	fprintf(stderr, " New avg_put:%d\n", thru->avg_put);
-	return (int)new_thruput; 
+	fprintf(stderr, " New avg_put: %d\n", thru->avg_put);
+	return (int)new_thruput;
 }
 
-
+/* similar to client_get_conn & server_get_conn */
 int get_thru_by_addrs(uint32_t clit_addr, uint32_t serv_addr) 
 {
 	int i = 0;
@@ -170,27 +167,31 @@ int get_thru_by_addrs(uint32_t clit_addr, uint32_t serv_addr)
 	return -1;
 }
 
+/*similar to add_conn*/
 int add_thru(uint32_t clit_addr, uint32_t serv_addr) 
 {
-    thruputs_t** thru = pool.thru_l;
-    thruputs_t* new_thru;
-    int i = 0;
+	int i = 0;
 
-    for(; i < FD_SETSIZE;i++) 
+	thruputs_t** thru = pool.thru_l;
+	thruputs_t* new_thru;
+
+	for(; i < FD_SETSIZE; i++) 
 	{
-        if (thru[i] == NULL) 
+		if (thru[i] == NULL) 
 		{
-            new_thru = (thruputs_t*)malloc(sizeof(thruputs_t));
-            new_thru->clit_addr = clit_addr;
-            new_thru->serv_addr = serv_addr;
-            new_thru->avg_put = 0;
-            thru[i] = new_thru;
-            
-            if (i > pool.max_thru_idx) 
-                pool.max_thru_idx = i;
-            return i;
-        }
-    }
-    /* failed to add new server */
-    return -1;
+			new_thru = (thruputs_t*)malloc(sizeof(thruputs_t));
+			new_thru->clit_addr = clit_addr;
+			new_thru->serv_addr = serv_addr;
+			new_thru->avg_put = 0;
+			
+			thru[i] = new_thru;
+			
+			if (i > pool.max_thru_idx) 
+				pool.max_thru_idx = i;
+			
+			return i;
+		}
+	}
+	/* failed to add new server */
+	return -1;
 }

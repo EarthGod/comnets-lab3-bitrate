@@ -21,16 +21,12 @@
 #define DATALEN 34 // The longest data length for this proj
 #define BUFSIZE 8192
 
-//static const unsigned char* QUERY = "video.pku.edu.cn";
-//static const unsigned char* RES = "00000101011101100110100101100100011001010110111100000010011000110111001100000011011000110110110101110101000000110110010101100100011101010000000000000000000000010000000000000001110000000000110000000000000000010000000000000001000000000000000000000000000000000000000000000100";
-//static const unsigned char* ERR = "00000101011101100110100101100100011001010110111100000010011000110111001100000011011000110110110101110101000000110110010101100100011101010000000000000000000000010000000000000001";
-
 /**
  *  The struct for DNS service on client side.
  *  dns_sock - a socket used for UDP communication
  *  servaddr - the address of DNS server. 
  */
-typedef struct dns_s{
+typedef struct dns_s {
 	int sock;
 	struct sockaddr_in servaddr;
 }dns_t;
@@ -38,14 +34,14 @@ typedef struct dns_s{
 
 /**
  *  The struct for DNS packet header.
- *  ID     - A random 16 bits number
- *  QR     - 0 for query and 1 for response
+ *  ID   - A random 16 bits number
+ *  QR   - 0 for query and 1 for response
  *  Opcode - 0 for standard query
- *  AA     - 0 for requests, 1 for response
- *  TC     - 0
- *  RD     - 0
- *  RA     - 0
- *  Z      - 0
+ *  AA   - 0 for requests, 1 for response
+ *  TC   - 0
+ *  RD   - 0
+ *  RA   - 0
+ *  Z     - 0
  *  Rcode  - 0 for no error, 3 for name error
  *  QDCOUNT - how many questions
  *  ANCOUNT - how many answers
@@ -117,7 +113,7 @@ typedef struct data_packet {
  *
  * @return 0 on success, -1 otherwise
  */
-int init_mydns(const char *dns_ip, unsigned int dns_port, const char* local_ip);
+int init_mydns(const char* dns_ip, unsigned int dns_port, const char* local_ip);
 
 
 /**
@@ -129,7 +125,7 @@ int init_mydns(const char *dns_ip, unsigned int dns_port, const char* local_ip);
  * struct addrinfo *result;
  * int rc = resolve("video.pku.edu.cn", "8080", null, &result);
  * if (rc != 0) {
- *     // handle error
+ *   // handle error
  * }
  * // connect to address in result
  * free(result);
@@ -144,8 +140,7 @@ int init_mydns(const char *dns_ip, unsigned int dns_port, const char* local_ip);
  * @return 0 on success, -1 otherwise
  */
 
-int resolve(const char *node, const char *service, 
-            const struct addrinfo *hints, struct addrinfo **res);
+int resolve(const char* node, const char* service, const struct addrinfo* hints, struct addrinfo** res);
 
 /**
  * Generate a DNS query. It is used to ask DNS server for a specific domain address
@@ -165,6 +160,6 @@ int pktToBuf(char* buf, data_packet_t* pkt);
 void free_pkt(data_packet_t* pkt);
 void hostToNet(data_packet_t* pkt);
 void netToHost(data_packet_t* pkt);
-void freeMyAddrinfo(struct addrinfo *addr);
+void freeMyAddrinfo(struct addrinfo* addr);
 
 #endif

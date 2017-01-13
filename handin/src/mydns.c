@@ -14,10 +14,9 @@ dns_t dns;
  * @return 0 on success, -1 otherwise
  */
  
-int init_mydns(const char *dns_ip, unsigned int dns_port, const char *local_ip) 
+int init_mydns(const char* dns_ip, unsigned int dns_port, const char* local_ip) 
 {
-	int sock;
-	int yes = 1;
+	int sock, yes = 1;
 	struct sockaddr_in myaddr;
 	
 	DPRINTF("Entering init_mydns\n");
@@ -30,13 +29,11 @@ int init_mydns(const char *dns_ip, unsigned int dns_port, const char *local_ip)
 	
 	bzero(&myaddr, sizeof(myaddr));
 	myaddr.sin_family = AF_INET;
-	//myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	inet_pton(AF_INET, local_ip, &(myaddr.sin_addr));
 	myaddr.sin_port = htons(0);
 	
 	// lose the pesky "address already in use" error message
 	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
-	
 	
 	if (bind(sock, (struct sockaddr *) &myaddr, sizeof(myaddr)) == -1) 
 	{
@@ -57,15 +54,15 @@ int init_mydns(const char *dns_ip, unsigned int dns_port, const char *local_ip)
 
 
 
-void freeMyAddrinfo(struct addrinfo *addr) 
+void freeMyAddrinfo(struct addrinfo* addr) 
 {
 	free(addr->ai_addr);
 	free(addr);
 }
 
+//generating query packet
 data_packet_t* make_query_pkt(const char* node) 
 {
-	
 	data_packet_t* tmp = (data_packet_t*) malloc(sizeof(data_packet_t));
 	tmp->header = (header_t*) malloc(sizeof(header_t));
 	tmp->query = (query_t*) malloc(sizeof(query_t));
@@ -81,21 +78,22 @@ data_packet_t* make_query_pkt(const char* node)
 	// generate header
 	srand(time(NULL));
 	header->id = (uint16_t)rand();
+
 	//header->FLAG = 0; // 0 0000 0 0 0 0 000 0000
 	header->qr = 0;  // a query
 	header->opcode = 0;
-	header->aa = 0;  
-	header->tc = 0;  
-	header->rd = 0;   
-    
-    header->ra = 0;
-    header->z  = 0;
-    header->rcode = 0;   
+	header->aa = 0;
+	header->tc = 0;
+	header->rd = 0;
 
-    header->qdcount = 1;
-    header->ancount = 0;
-    header->nscount = 0;
-    header->arcount = 0;
+	header->ra = 0;
+	header->z = 0;
+	header->rcode = 0;
+
+	header->qdcount = 1;
+	header->ancount = 0;
+	header->nscount = 0;
+	header->arcount = 0;
 	// generate data 
 	dot2len(name,node);
 
@@ -128,19 +126,17 @@ int parse_res(char* req_buf, char* res_buf, struct addrinfo* tmp, int length)
 
 
 	qname = (char*)(req_buf + sizeof(header_t));
-	offest = length + strlen(qname)+1 + sizeof(answer_t) - 2; // padding
+	offest = length + strlen(qname) + sizeof(answer_t) - 1; // padding
 	ip = res_buf + offest;
 	ip_int = (uint32_t*)ip;
 	((struct sockaddr_in*)tmp->ai_addr)->sin_addr.s_addr = *ip_int;
 	return 0;
 }
 
-
-
+//dot to len
 void dot2len(char* name, const char* const_src) 
 {
-	int pos = 0;
-	int i;
+	int i = 0, pos = 0;
 	int length = strlen(const_src);
 	char src[length+1];
 	memcpy(src, const_src, length);
@@ -152,7 +148,7 @@ void dot2len(char* name, const char* const_src)
 		{
 			*name = i - pos;
 			name++; 
-			for (;pos < i;pos++) 
+			for (; pos < i; pos++) 
 			{
 				*name = src[pos];
 				name++;
@@ -163,6 +159,7 @@ void dot2len(char* name, const char* const_src)
 	*name = '\0';
 }
 
+//packet to buf
 int pktToBuf(char* buf, data_packet_t* pkt) 
 {
 	int index  = 0, length = 0;
@@ -192,7 +189,7 @@ int pktToBuf(char* buf, data_packet_t* pkt)
 		memcpy(buf+index,res->answer,length);
 		index += length;
 
-		length = sizeof(uint32_t); // only work for ipv4
+		length = sizeof(uint32_t); // ipv4 only
 		memcpy(buf+index,res->data,length);
 		index += length;
 	}
@@ -210,22 +207,22 @@ void hostToNet(data_packet_t* pkt)
 	question_t *q = qry->question;
 	dns_response_t* res = pkt->response;
 
-    hdr->id = htons(hdr->id);
-    hdr->rcode = htonl(hdr->rcode);
-    hdr->qdcount = htons(hdr->qdcount);
-    hdr->ancount = htons(hdr->ancount);
+	hdr->id = htons(hdr->id);
+	hdr->rcode = htonl(hdr->rcode);
+	hdr->qdcount = htons(hdr->qdcount);
+	hdr->ancount = htons(hdr->ancount);
 
-    q->qtype = htons(q->qtype);
-    q->qclass = htons(q->qclass);
+	q->qtype = htons(q->qtype);
+	q->qclass = htons(q->qclass);
 
-    if (res) 
+	if (res) 
 	{
-    	answer_t* ans = res->answer;
-    	ans->atype = htons(ans->atype);
-        ans->aclass = htons(ans->aclass);
-        ans->attl = htons(ans->attl);
-        ans->ardlength = htons(ans->ardlength);
-    }
+		answer_t* ans = res->answer;
+		ans->atype = htons(ans->atype);
+		ans->aclass = htons(ans->aclass);
+		ans->attl = htons(ans->attl);
+		ans->ardlength = htons(ans->ardlength);
+	}
 }
 
 
@@ -236,22 +233,22 @@ void netToHost(data_packet_t* pkt)
 	question_t *q = qry->question;
 	dns_response_t* res = pkt->response;
 
-    hdr->id = ntohs(hdr->id);
-    hdr->rcode = ntohl(hdr->rcode);
-    hdr->qdcount = ntohs(hdr->qdcount);
-    hdr->ancount = ntohs(hdr->ancount);
+	hdr->id = ntohs(hdr->id);
+	hdr->rcode = ntohl(hdr->rcode);
+	hdr->qdcount = ntohs(hdr->qdcount);
+	hdr->ancount = ntohs(hdr->ancount);
 
-    q->qtype = ntohs(q->qtype);
-    q->qclass = ntohs(q->qclass);
+	q->qtype = ntohs(q->qtype);
+	q->qclass = ntohs(q->qclass);
 
-    if (res) 
+	if (res) 
 	{
-    	answer_t* ans = res->answer;
-    	ans->atype = ntohs(ans->atype);
-        ans->aclass = ntohs(ans->aclass);
-        ans->attl = ntohs(ans->attl);
-        ans->ardlength = ntohs(ans->ardlength);
-    }
+		answer_t* ans = res->answer;
+		ans->atype = ntohs(ans->atype);
+		ans->aclass = ntohs(ans->aclass);
+		ans->attl = ntohs(ans->attl);
+		ans->ardlength = ntohs(ans->ardlength);
+	}
 }
 
 void free_pkt(data_packet_t* pkt) 
@@ -271,8 +268,7 @@ void free_pkt(data_packet_t* pkt)
 }
 
 
-int resolve(const char *node, const char *service, 
-            const struct addrinfo *hints, struct addrinfo **res) 
+int resolve(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res) 
 {
 	int recvlen = 0;
 	int pkt_len = 0;
@@ -329,19 +325,8 @@ int resolve(const char *node, const char *service,
 		return -1;
 	}
 	free_pkt(pkt);
+
 	// fill up port info
 	((struct sockaddr_in*)tmp->ai_addr)->sin_port = htons(atoi(service));
 	return 0; 
 }
-
-
-
-/*
-int main() 
-{
-	data_packet_t* pkt = make_query_pkt("video.pku.edu.cn");
-	char buf[BUFSIZE];
-	pktToBuf(buf, pkt);
-	return 0;
-}
-*/

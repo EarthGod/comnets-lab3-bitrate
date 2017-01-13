@@ -1,7 +1,6 @@
 #ifndef _DEBUG_H
 #define _DEBUG_H
 
-
 #include <sys/types.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -14,6 +13,5 @@
 #else
 #define DPRINTF(fmt, args...)
 #endif
-
 
 #endif

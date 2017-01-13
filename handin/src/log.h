@@ -8,6 +8,4 @@
 
 void loggin(conn_t* conn, thruputs_t* thru);
 
-
-
 #endif

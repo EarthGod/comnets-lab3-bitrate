@@ -1,42 +1,32 @@
 #include "media.h"
 
-
 serv_list_t *serv_list;
-
-
-
 
 /** detecting whether base is ends with str
  *  @return 1 on ends with; 0 on does not end with
  */
 int endsWith(char* base, char* str) 
 {
-    int blen = strlen(base);
-    int slen = strlen(str);
-    return (blen >= slen) && (0 == strcmp(base + blen - slen, str));
+	int blen = strlen(base);
+	int slen = strlen(str);
+	return (blen >= slen) && (0 == strcmp(base + blen - slen, str));
 }
 
+void init_serv_list() {serv_list = NULL;}
 
-
-void init_serv_list() 
-{
-	serv_list = NULL;
-}
-
-
-
+// add to a linked list
 serv_list_t* serv_add(struct sockaddr_in *serv) 
 {
-	serv_list_t *ptr = serv_list;
-	serv_list_t *tmp;
+	serv_list_t* ptr = serv_list;
+	serv_list_t* tmp;
 
 	tmp = (serv_list_t*)malloc(sizeof(serv_list_t));
 	tmp->addr = serv->sin_addr.s_addr;
 	tmp->thruput = 0;
 	tmp->next = NULL;
-	if(ptr!= NULL) 
+	if (ptr) 
 	{
-		while (ptr->next != NULL)
+		while (ptr->next)
 			ptr = ptr->next;
 		ptr->next = tmp;
 	} 
@@ -45,7 +35,7 @@ serv_list_t* serv_add(struct sockaddr_in *serv)
 	return tmp;
 }
 
-
+// delete from a linked list
 void serv_del(struct sockaddr_in *serv) 
 {
 	serv_list_t *curr = serv_list;
@@ -53,11 +43,11 @@ void serv_del(struct sockaddr_in *serv)
 	uint32_t addr = serv->sin_addr.s_addr;
 
 
-	for (curr = serv_list; curr != NULL; prev = curr, curr = curr->next) 
+	for (curr = serv_list; curr; prev = curr, curr = curr->next) 
 	{
-
 		if (curr->addr == addr) 
-		{  /* Found it. */
+		{
+			/* Found it. */
 			if (prev == NULL) 
 				serv_list = curr->next;
 			else 
@@ -71,12 +61,12 @@ void serv_del(struct sockaddr_in *serv)
 
 serv_list_t* serv_get(struct sockaddr_in *serv) 
 {
-	serv_list_t *ptr;
+	serv_list_t* ptr;
 	uint32_t addr = serv->sin_addr.s_addr;
-	for (ptr = serv_list; ptr != NULL; ptr = ptr->next) 
+	for (ptr = serv_list; ptr; ptr = ptr->next) 
 		if (ptr->addr == addr) 
 			break;
-	if (ptr != NULL) 
+	if (ptr) 
 	{
 		assert(ptr->thruput != -1);
 		return ptr;
@@ -90,11 +80,11 @@ void modi_path(char* path, int thruput, conn_t* conn)
 	char* vod_index = NULL;
 	char* seg_index = NULL;
 	char rate[32];
+
 	vod_index = strstr(path,"/vod/");
 	seg_index = strstr(path,"Seg");
-	if (seg_index != NULL) 
+	if (seg_index) 
 	{
-		//fprintf(stderr, "old path:%s\n",path );
 		strncpy(buffer,path,vod_index-path + 5);
 		
 		sprintf(rate, "%d", thruput);
@@ -104,8 +94,7 @@ void modi_path(char* path, int thruput, conn_t* conn)
 		strcpy(path,buffer);
 		strcpy(conn->cur_file,path);
 		conn->cur_file[strlen(path)] = '\0';
-	} 
-	//fprintf(stderr, "new path:%s\n",path );		
+	}	
 }
 
 int isVideo(char *path) 

@@ -10,27 +10,27 @@
 #define MAX_CONN 2048 
 #define MAX_FILE_NAME 8192 
 
-
-
-
+/*define the struct of clients*/
 typedef struct client_s 
 {
-    int fd;     
-    unsigned int cur_size; 
-    unsigned int size;   
-    uint32_t addr;
-    int num_serv;
+	int fd;
+	unsigned int cur_size; 
+	unsigned int size;   
+	uint32_t addr;
+	int num_serv;
 } client_t;
 
+/*define the struct of servers*/
 typedef struct server_s 
 {
 	int fd;
 	unsigned int cur_size; 
-    unsigned int size;     
+	unsigned int size;
 	uint32_t addr;
 	int num_clit;
 } server_t;
 
+/*define the struct of connections*/
 typedef struct conn_s 
 {
 	int serv_idx;
@@ -45,6 +45,7 @@ typedef struct conn_s
 	int alive; /* 1 when connection is alive; 0 when connection is closed */
 } conn_t;
 
+/*define the struct of responses*/
 typedef struct response_s 
 {
 	int length;
@@ -53,7 +54,8 @@ typedef struct response_s
 	int hdr_len;
 	int close;
 } response_t;
-	
+
+/*define the struct of throughput*/
 typedef struct thruputs_s 
 {
 	uint32_t clit_addr;
@@ -62,8 +64,8 @@ typedef struct thruputs_s
 } thruputs_t;
 
 
-int server_get_conn(int );
-int client_get_conn(int ,uint32_t);
+int server_get_conn(int);
+int client_get_conn(int, uint32_t);
 int add_conn(int, int);
 int update_conn(int clit_idx, int serv_idx);
 void close_conn(int);
@@ -71,4 +73,5 @@ int update_thruput(int, conn_t*, thruputs_t* thru);
 
 int get_thru_by_addrs(uint32_t clit_addr, uint32_t serv_addr);
 int add_thru(uint32_t clit_addr, uint32_t serv_addr);
+
 #endif

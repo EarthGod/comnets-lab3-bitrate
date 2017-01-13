@@ -15,5 +15,4 @@ ssize_t io_recvlineb(int fd, void *usrbuf, size_t maxlen);
 ssize_t io_recvn_block(int fd, char *buf, int n);
 ssize_t io_recvline_block(int fd, void *usrbuf, size_t maxlen);
 
-
 #endif

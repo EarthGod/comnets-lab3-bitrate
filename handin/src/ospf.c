@@ -6,9 +6,6 @@
 static int parse_servs(char *servers);
 static int parse_LSA(char *LSAs);
 
-//static void print_topo(void* data, void* func_data);
-//static void print_table(void* data, void* func_data);
-
 static void calc_sp(void* data, void* func_data);
 static void unmark(void* data, void* func_data);
 
@@ -30,116 +27,112 @@ void mylist_free(MyList *list);
 /* functions of MyList */
 MyList* mylist_new(void) 
 {
-    return (MyList*)calloc(1,sizeof(MyList));
+	return (MyList*)calloc(1,sizeof(MyList));
 }
+
 MyList* mylist_last(MyList *list) 
 {
-    if (list) 
+	if (list) 
 	{
-        while (list->next)
-            list = list->next;
-    }
+		while (list->next)
+			list = list->next;
+	}
 
-    return list;
+	return list;
 }
 
 MyList* mylist_append(MyList* list, void* data) 
 {
-	//fprintf(stderr, "entering append!\n");
-    MyList *new_list;
-    MyList *last;
+	MyList *new_list;
+	MyList *last;
 
-    new_list = mylist_new();
-    new_list->data = data;
-    new_list->next = NULL;
+	new_list = mylist_new();
+	new_list->data = data;
+	new_list->next = NULL;
 
-    if (list) 
+	if (list) 
 	{
-		
-        last = mylist_last(list);
-        last->next = new_list;
-        new_list->prev = last;
+		last = mylist_last(list);
+		last->next = new_list;
+		new_list->prev = last;
 		//fprintf(stderr, "%d %s\n", list, list->data);
-        return list;
-    } 
+		return list;
+	} 
 	else 
 	{
-        new_list->prev = NULL;
-		
-        return new_list;
-    }
+		new_list->prev = NULL;
+		return new_list;
+	}
 }
 
 
 void* mylist_getdata(MyList* list, unsigned int n) 
 {
-    while (n-- > 0 && list)
-        list = list->next;
+	while (n-- > 0 && list)
+		list = list->next;
 
-    return list ? list->data : NULL;
+	return list ? list->data : NULL;
 }
 
 MyList* mylist_find(MyList* list, const void* data) 
 {
-    while (list) 
+	while (list) 
 	{
-        if (list->data == data)
-            break;
-        list = list->next;
-    }
+		if (list->data == data)
+			break;
+		list = list->next;
+	}
 
-    return list;
+	return list;
 }
 
 MyList* mylist_find_custom(MyList* list, const void* data, MyCmpFunc func) 
 {
-    if (func == NULL) return NULL;
+	if (func == NULL) return NULL;
 
-    while (list) 
+	while (list) 
 	{
-        if (!(*func)(list->data, data))
-            return list;
-        list = list->next;
-    }
-    return NULL;
+		if (!(*func)(list->data, data))
+			return list;
+		list = list->next;
+	}
+	return NULL;
 }
 
 
 unsigned int mylist_length(MyList *list) 
 {
-    unsigned int length = 0;
-    while (list) 
+	unsigned int length = 0;
+	while (list) 
 	{
-        length++;
-        list = list->next;
-    }
+		length++;
+		list = list->next;
+	}
 
-    return length;
+	return length;
 }
 
 
 void mylist_foreach(MyList* list, MyFunc func, void* func_data) 
 {
-    while (list) 
+	while (list) 
 	{
-        MyList *next = list->next;
-        (*func)(list->data, func_data);
-        list = next;
-    }
+		MyList *next = list->next;
+		(*func)(list->data, func_data);
+		list = next;
+	}
 }
 
 void mylist_free(MyList *list) 
 {
-    if (list == NULL) 
-        return;
-    mylist_free(list->next);
-    free(list);
-    return;
+	if (list == NULL) 
+		return;
+	mylist_free(list->next);
+	free(list);
+	return;
 }
 
 /* functions of MyList end */
-
-
 
 MyQueue* myqueue_new(void);
 bool myqueue_is_empty(MyQueue* queue);
@@ -149,50 +142,44 @@ void* myqueue_pop_head(MyQueue *queue);
 /* functions of MyQueue */
 MyQueue* myqueue_new(void) 
 {
-    return (MyQueue*)calloc(1, sizeof(MyQueue));
+	return (MyQueue*)calloc(1, sizeof(MyQueue));
 }
 
-
-bool myqueue_is_empty(MyQueue* queue) 
-{
-    return queue->head == NULL;
-}
-
-
+bool myqueue_is_empty(MyQueue* queue) {return queue->head == NULL;}
 
 void myqueue_push_tail(MyQueue* queue, void* data) 
 {
-    if (queue == NULL) return;
+	if (queue == NULL) return;
 
-    queue->tail = mylist_append(queue->tail, data);
-    if (queue->tail->next)
-        queue->tail = queue->tail->next;
-    else
-        queue->head = queue->tail;
-    queue->length++;
+	queue->tail = mylist_append(queue->tail, data);
+	if (queue->tail->next)
+		queue->tail = queue->tail->next;
+	else
+		queue->head = queue->tail;
+	queue->length++;
 }
 
 void* myqueue_pop_head(MyQueue *queue) 
 {
-    if (queue == NULL) return NULL;
+	if (queue == NULL) return NULL;
 
-    if (queue->head) 
+	if (queue->head) 
 	{
-        MyList* node = queue->head;
-        void* data = node->data;
+		MyList* node = queue->head;
+		void* data = node->data;
 
-        queue->head = node->next;
-        if (queue->head)
-            queue->head->prev = NULL;
-        else
-            queue->tail = NULL;
-        free(node);
-        queue->length--;
+		queue->head = node->next;
+		if (queue->head)
+			queue->head->prev = NULL;
+		else
+			queue->tail = NULL;
+		free(node);
+		queue->length--;
 
-        return data;
-    }
+		return data;
+	}
 
-    return NULL;
+	return NULL;
 }
 
 
@@ -440,7 +427,7 @@ static int find_entry_by_name(const void* a, const void* b)
 
 static int startsWith(char* base, char* str) 
 {
-    int blen = strlen(base);
-    int slen = strlen(str);
-    return (blen >= slen) && (0 == strncmp(base, str, slen));
+	int blen = strlen(base);
+	int slen = strlen(str);
+	return (blen >= slen) && (0 == strncmp(base, str, slen));
 }

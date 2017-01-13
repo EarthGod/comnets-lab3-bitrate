@@ -22,6 +22,4 @@ int parse(char* buf);
 int res_err(char* origin);
 int gen_res(char* req_buf, char* res_buf, char* dest_addr);
 
-
-
 #endif
