@@ -3,3 +3,29 @@ need to install libxml2 first
 	cd libxml2-2.9.4
 	./configure
 	make install
+	
+	
+testscipt usage:
+cp1
+
+/cp1_tests.tar 
+/handin/src/...
+
+tar xf cp1_tests.tar
+cd bitrate-project/grader
+vim grader_super.py
+line 17 : VIDEO_SERVER_NAME = 'video.cs.cmu.edu'
+       -> VIDEO_SERVER_NAME = 'video.pku.edu.cn'
+sudo ./grader_super.py
+
+
+cp2	  
+ 
+/cp2_tests.tar 
+/handin/src/...
+tar xf cp2_tests.tar
+cd grading/grader
+vim grader_super.py
+line 19 : VIDEO_SERVER_NAME = 'video.cs.cmu.edu'
+       -> VIDEO_SERVER_NAME = 'video.pku.edu.cn'
+sudo ./grader_cp2.py

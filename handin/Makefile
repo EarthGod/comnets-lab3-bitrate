@@ -9,4 +9,4 @@ clobber: clean
 	cd src; make clobber
 
 handin:
-	make clean; cd ..; tar cvf handin.tar handin --exclude .git
+	make clean; cd ..; tar cvf handin.tar handin
