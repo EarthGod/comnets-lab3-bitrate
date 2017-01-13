@@ -10,7 +10,7 @@ static char pkt_buf[BUFSIZE];
 static int buf_pkt_len;
 
 
-static int buf_len(char* buf);
+static int calc_len(char* buf);
 
 static void ns_output_log_init(char* log_file) 
 {
@@ -37,8 +37,8 @@ int main(int argc, char* argv[])
 	fd_set read_rdy;
 	int nready = 0;
 
-	char* log_file, serv_file;
-	char* ip, lsa;
+	char* log_file, *serv_file;
+	char* ip, *lsa;
 	int port;
 
 	int rr_flag = 0;
@@ -109,32 +109,32 @@ void init_ref()
 
 int init_udp(char* ip, int port, fd_set* read_nrdy) 
 {
-  int sock;
-  struct sockaddr_in myaddr;
-  int yes = 1;
-  if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP)) == -1) 
-  {
-    DPRINTF("init_udp could not create socket");
-    exit(-1);
-  }
-  
-  // lose the pesky "address already in use" error message
-  setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
-
-
-  bzero(&myaddr, sizeof(myaddr));
-  myaddr.sin_family = AF_INET;
-  inet_pton(AF_INET, ip, &(myaddr.sin_addr));
-  //myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  myaddr.sin_port = htons(port);
-  
-  if (bind(sock, (struct sockaddr *) &myaddr, sizeof(myaddr)) == -1) 
-  {
-    DPRINTF("init_udp could not bind socket\n");
-    exit(-1);
-  }
-  FD_SET(sock,read_nrdy);
-  return sock;
+	int sock;
+	struct sockaddr_in myaddr;
+	int yes = 1;
+	if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP)) == -1) 
+	{
+	DPRINTF("init_udp could not create socket");
+	exit(-1);
+	}
+	
+	// lose the pesky "address already in use" error message
+	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
+	
+	
+	bzero(&myaddr, sizeof(myaddr));
+	myaddr.sin_family = AF_INET;
+	inet_pton(AF_INET, ip, &(myaddr.sin_addr));
+	//myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	myaddr.sin_port = htons(port);
+	
+	if (bind(sock, (struct sockaddr *) &myaddr, sizeof(myaddr)) == -1) 
+	{
+	DPRINTF("init_udp could not bind socket\n");
+	exit(-1);
+	}
+	FD_SET(sock,read_nrdy);
+	return sock;
 }
 
 void serve(int fd, int rr_flag) 
@@ -158,7 +158,7 @@ void serve(int fd, int rr_flag)
 		{
 			// invalid query
 			fprintf(stderr, "NS serve: invalid query\n");
-			pkt_len = gen_err(req_buf);
+			pkt_len = res_err(req_buf);
 			sendto(fd, req_buf, pkt_len, 0, (struct sockaddr *)&from, fromlen);
 		} 
 		else 
@@ -166,6 +166,7 @@ void serve(int fd, int rr_flag)
 			// generate response
 			fprintf(stderr, "NS serve: Valid query\n");
 			res_ip_str = route(from_str, rr_flag);
+			fprintf(stderr,"%s\n", res_ip_str);
 			ns_output_log(from_str, ref_host, res_ip_str);
 			pkt_len = gen_res(req_buf, res_buf, res_ip_str);
 			// send response back to client
@@ -190,7 +191,7 @@ static int calc_len(char* buf)
 	return length;
 }
 
-int err(char* origin) 
+int res_err(char* origin) 
 {
 	int len = calc_len(origin);
 	header_t* hdr = (header_t*)origin;
@@ -236,8 +237,10 @@ int parse(char* buf)
 {
 	int offset = sizeof(uint16_t);
 
-	if (memcmp(buf+offset, pkt_buf+offset, buf_pkt_len-offset)) {
+	if (memcmp(buf+offset, pkt_buf+offset, buf_pkt_len-offset)) 
+	{
 		return -1;
+		
 	}
 	return 0;
 }

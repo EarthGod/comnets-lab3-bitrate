@@ -1,5 +1,5 @@
 #ifndef _CONNECTION_H
-#define _CONNNETION_H
+#define _CONNECTION_H
 
 #include <stdint.h>
 #include <stdlib.h>

@@ -16,43 +16,43 @@ dns_t dns;
  
 int init_mydns(const char *dns_ip, unsigned int dns_port, const char *local_ip) 
 {
-  int sock;
-  int yes = 1;
-  struct sockaddr_in myaddr;
-
-  DPRINTF("Entering init_mydns\n");
-  
-  if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP)) == -1) 
-  {
-    DPRINTF("init_mydns could not create socket");
-    exit(-1);
-  }
-  
-  bzero(&myaddr, sizeof(myaddr));
-  myaddr.sin_family = AF_INET;
-  //myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  inet_pton(AF_INET, local_ip, &(myaddr.sin_addr));
-  myaddr.sin_port = htons(0);
-  
-  // lose the pesky "address already in use" error message
-  setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
-
-
-  if (bind(sock, (struct sockaddr *) &myaddr, sizeof(myaddr)) == -1) 
-  {
-    DPRINTF("init_mydns could not bind socket, %s\n", strerror(errno));
-    exit(-1);
-  }
-
-  /* fill the address of DNS server */
-  dns.sock = sock;
-  memset((char*)&(dns.servaddr), 0, sizeof(dns.servaddr));
-  dns.servaddr.sin_family = AF_INET;
-  dns.servaddr.sin_port = htons(dns_port);
-  inet_pton(AF_INET, dns_ip, &(dns.servaddr.sin_addr));
-
-  DPRINTF("Exiting init_mydns\n");
-  return 0;
+	int sock;
+	int yes = 1;
+	struct sockaddr_in myaddr;
+	
+	DPRINTF("Entering init_mydns\n");
+	
+	if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP)) == -1) 
+	{
+		DPRINTF("init_mydns could not create socket");
+		exit(-1);
+	}
+	
+	bzero(&myaddr, sizeof(myaddr));
+	myaddr.sin_family = AF_INET;
+	//myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	inet_pton(AF_INET, local_ip, &(myaddr.sin_addr));
+	myaddr.sin_port = htons(0);
+	
+	// lose the pesky "address already in use" error message
+	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
+	
+	
+	if (bind(sock, (struct sockaddr *) &myaddr, sizeof(myaddr)) == -1) 
+	{
+		DPRINTF("init_mydns could not bind socket, %s\n", strerror(errno));
+		exit(-1);
+	}
+	
+	/* fill the address of DNS server */
+	dns.sock = sock;
+	memset((char*)&(dns.servaddr), 0, sizeof(dns.servaddr));
+	dns.servaddr.sin_family = AF_INET;
+	dns.servaddr.sin_port = htons(dns_port);
+	inet_pton(AF_INET, dns_ip, &(dns.servaddr.sin_addr));
+	
+	DPRINTF("Exiting init_mydns\n");
+	return 0;
 }
 
 
@@ -150,14 +150,14 @@ void dot2len(char* name, const char* const_src)
 	{
 		if (src[i] == '.') 
 		{
-			name++; 
 			*name = i - pos;
-			for (;dot < i;pos++) 
+			name++; 
+			for (;pos < i;pos++) 
 			{
-				name++;
 				*name = src[pos];
+				name++;
 			}
-			pos ++;
+			pos++;
 		}
 	}
 	*name = '\0';
@@ -203,11 +203,8 @@ int pktToBuf(char* buf, data_packet_t* pkt)
 
 
 
-/** @brief Convert data from local format to network format
- *  @param pkt pkt to be send
- *  @return void
- */
-void hostToNet(data_packet_t* pkt) {
+void hostToNet(data_packet_t* pkt) 
+{
 	header_t* hdr = pkt->header;
 	query_t* qry = pkt->query;
 	question_t *q = qry->question;
@@ -231,11 +228,9 @@ void hostToNet(data_packet_t* pkt) {
     }
 }
 
-/** @brief Convert data from network format to local format
- *  @param pkt pkt to be send
- *  @return void
- */
-void netToHost(data_packet_t* pkt) {
+
+void netToHost(data_packet_t* pkt) 
+{
 	header_t* hdr = pkt->header;
 	query_t* qry = pkt->query;
 	question_t *q = qry->question;
@@ -249,7 +244,8 @@ void netToHost(data_packet_t* pkt) {
     q->qtype = ntohs(q->qtype);
     q->qclass = ntohs(q->qclass);
 
-    if (res) {
+    if (res) 
+	{
     	answer_t* ans = res->answer;
     	ans->atype = ntohs(ans->atype);
         ans->aclass = ntohs(ans->aclass);
@@ -258,12 +254,14 @@ void netToHost(data_packet_t* pkt) {
     }
 }
 
-void free_pkt(data_packet_t* pkt) {
+void free_pkt(data_packet_t* pkt) 
+{
 	free(pkt->query->question);
 	free(pkt->query->qname);
 	free(pkt->query);
 	free(pkt->header);
-	if (pkt->response) {
+	if (pkt->response) 
+	{
 		free(pkt->response->name);
 		free(pkt->response->answer);
 		free(pkt->response->data);
@@ -272,31 +270,6 @@ void free_pkt(data_packet_t* pkt) {
 	free(pkt);
 }
 
-
-
-/**
- * Resolve a DNS name using your custom DNS server.
- *
- * Whenever your proxy needs to open a connection to a web server, it calls
- * resolve() as follows:
- *
- * struct addrinfo *result;
- * int rc = resolve("video.pku.edu.cn", "8080", null, &result);
- * if (rc != 0) {
- *     // handle error
- * }
- * // connect to address in result
- * free(result);
- *
- *
- * @param  node  The hostname to resolve.
- * @param  service  The desired port number as a string.
- * @param  hints  Should be null. resolve() ignores this parameter.
- * @param  res  The result. resolve() should allocate a struct addrinfo, which
- * the caller is responsible for freeing.
- *
- * @return 0 on success, -1 otherwise
- */
 
 int resolve(const char *node, const char *service, 
             const struct addrinfo *hints, struct addrinfo **res) 

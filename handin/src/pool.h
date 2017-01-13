@@ -13,7 +13,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <fcntl.h>
-#include "conn.h"
+#include "connection.h"
 #include "mydns.h"
 #include "debug.h"
 

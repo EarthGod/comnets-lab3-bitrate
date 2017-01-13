@@ -58,7 +58,7 @@ void serv_del(struct sockaddr_in *serv)
 
 		if (curr->addr == addr) 
 		{  /* Found it. */
-			if (prev == NULL) {
+			if (prev == NULL) 
 				serv_list = curr->next;
 			else 
 				prev->next = curr->next;

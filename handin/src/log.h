@@ -3,7 +3,7 @@
 
 #include "timer.h"
 #include "pool.h"
-#include "conn.h"
+#include "connection.h"
 #include <stdlib.h>
 
 void loggin(conn_t* conn, thruputs_t* thru);

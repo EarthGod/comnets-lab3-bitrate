@@ -6,12 +6,12 @@
 #include <ctype.h>
 #include <sys/time.h>
 #include "pool.h"
-#include "io.h"
+#include "sock.h"
 #include "media.h"
-#include "conn.h"
+#include "connection.h"
 #include "timer.h"
 #include "log.h"
-#include "parse_xml.h"
+#include "xml_parser.h"
 
 
 #define FLAG_VIDEO    0

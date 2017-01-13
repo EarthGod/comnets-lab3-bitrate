@@ -158,14 +158,7 @@ int resolve(const char *node, const char *service,
 data_packet_t* make_query_pkt(const char* node);
 
 
-/**
- * Parse the DNS response. Fill the address struct
- *
- * @param  pkt  The original response packet
- * @param  tmp	The address info struct which requires to be filled up
- *
- * @return 0 if the response is valid with correct result, -1 if query failed somehow
- */
+
 int parse_res(char* req_buf, char* res_buf, struct addrinfo* tmp, int pkt_len);
 void dot2len(char* name, const char* src);
 int pktToBuf(char* buf, data_packet_t* pkt);

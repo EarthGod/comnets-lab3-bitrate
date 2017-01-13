@@ -19,7 +19,7 @@ void init_ref();
 int init_udp(char* ip, int port, fd_set* read_nrdy);
 void serve(int fd, int rr_flag);
 int parse(char* buf);
-int gen_err(char* origin);
+int res_err(char* origin);
 int gen_res(char* req_buf, char* res_buf, char* dest_addr);
 
 
