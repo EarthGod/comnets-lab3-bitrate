@@ -6,7 +6,8 @@ extern pool_t pool;
 
 
 
-void loggin(conn_t* conn, thruputs_t* thru) {
+void loggin(conn_t* conn, thruputs_t* thru) 
+{
 	time_t since_epoch;
 	since_epoch = time(NULL);
 	//int elapsed = (int)get_time_diff(&(pool.start));

@@ -1,0 +1,5 @@
+need to install libxml2 first
+	tar xf libxml2-2.9.4.tar.gz
+	cd libxml2-2.9.4
+	./configure
+	make install

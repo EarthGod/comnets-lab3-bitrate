@@ -1,9 +1,3 @@
-/*
- * proxy.c - A proxy server for CMU 15-213 proxy lab
- * Author: Ming Fang
- * Email:  mingf@andrew.cmu.edu
- */
-
 #include <stdio.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -32,18 +26,6 @@ pool_t pool;
 bit_t* bitrates;
 char nolist_buf[MAXLINE];
 
-
-static const char *user_agent_hdr = "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:10.0.3) Gecko/20120305 Firefox/10.0.3\r\n";
-static const char *accept_hdr = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
-static const char *accept_encoding_hdr = "Accept-Encoding: gzip,deflate,sdch\r\n";
-static const char *connection_hdr = "Connection: Keep-alive\r\n";
-static const char *pxy_connection_hdr = "Proxy-Connection: Keep-alive\r\n\r\n";
-
-static const char *VIDEO_HOST = "video.pku.edu.cn";
-static const char *VIDEO_PORT = "8080";
-
-
-/* Function prototype */
 int parse_uri(char *uri, char *host, int *port, char *path);
 void clienterror(int fd, char *cause, char *errnum, 
 		 char *shortmsg, char *longmsg);
@@ -56,6 +38,19 @@ void server2client(int);
 bit_t* process_list(int serv_fd, int length); 
 void ask_for_nolist(int serv_fd, int clit_idx, int close);
 void usage();
+
+
+static const char *user_agent_hdr = "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:10.0.3) Gecko/20120305 Firefox/10.0.3\r\n";
+static const char *accept_hdr = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
+static const char *accept_encoding_hdr = "Accept-Encoding: gzip,deflate,sdch\r\n";
+static const char *connection_hdr = "Connection: Keep-alive\r\n";
+static const char *pxy_connection_hdr = "Proxy-Connection: Keep-alive\r\n\r\n";
+
+static const char *VIDEO_HOST = "video.pku.edu.cn";
+static const char *VIDEO_PORT = "8080";
+
+
+/* Function prototype */
 
 
 int main(int argc, char **argv) 
@@ -384,9 +379,7 @@ void client2server(int clit_idx)
     if (flag != FLAG_LIST) 
 	{
         DPRINTF("This is no a f4m request, done\n");
-
-        return;  // done with this, wait for nofication from select 
-        //send pipelined request to serv
+        return;  
     }
 
     if (flag == FLAG_LIST) 
@@ -401,8 +394,6 @@ void server2client(int serv_idx)
     client_t* client;
     thruputs_t* thru;
     conn_t* conn;
-    //struct timeval start;
-    //struct timeval end;
     int server_fd;
     int client_fd;
     int conn_idx;
@@ -419,7 +410,7 @@ void server2client(int serv_idx)
 
     server = GET_SERV_BY_IDX(serv_idx);
     server_fd = server->fd;
-    /* get connection */
+    // get connection 
     if ((conn_idx = server_get_conn(server_fd)) == -1) 
 	{
         DPRINTF("Cannot find connection from server to client! Error\n");
@@ -503,7 +494,7 @@ void server2client(int serv_idx)
         return;
     }
 
-    /* This is not a XML */
+    // This is not a XML 
     n = io_sendn(client_fd, res.hdr_buf, res.hdr_len);  
     if (n != res.hdr_len) 
 	{
@@ -518,16 +509,12 @@ void server2client(int serv_idx)
         close_conn(conn_idx);
         return;
     }
-    gettimeofday(&(conn->end), NULL);  /* update conn end time */
+    gettimeofday(&(conn->end), NULL);  
     
     thru_idx = get_thru_by_addrs(client->addr, server->addr);
     thru = GET_THRU_BY_IDX(thru_idx);
     if(res.type == TYPE_F4F) 
-	{
-        //fprintf(stderr, "chunk size is :%ld\n", res.length);
         update_thruput(res.length, conn, thru);
-        //update_thruput_global(conn);
-    }
     loggin(conn, thru); 
 
     DPRINTF("Successfully recv body from server:%d, n = %d,len = %d\n", server_fd, n, res.length);
@@ -563,7 +550,6 @@ int parse_uri(char *uri, char *host, int *port, char *path)
     ptr = uri;
     DPRINTF("About to parse URI\n");
     DPRINTF("URI: %s\n", uri);
-    /* Read scheme */
     tmp = strchr(ptr, ':');
     if (NULL == tmp) 
 	{ 
@@ -578,14 +564,12 @@ int parse_uri(char *uri, char *host, int *port, char *path)
     for (i = 0; i < len; i++)
     	scheme[i] = tolower(scheme[i]);
     if (strcasecmp(scheme, "http"))
-    	return 0;   // Error, only support http
+    	return 0;  
 
     // Skip ':'
     tmp++;
     ptr = tmp;
 
-    /* Read host */
-    // Skip "//"
     for ( i = 0; i < 2; i++ ) 
 	{
         if ( '/' != *ptr ) 
@@ -667,18 +651,10 @@ int read_requesthdrs(int clit_fd, char *host, int* port)
         
 
         if (len == 0) 
-		{
-            //printf("read header with 0 len\n");
             return 1;
-        }
 
         if (buf[len - 1] != '\n') 
-		{
-            //printf("read header without \\n at end\n");
             return -1;
-        }
-
-        //printf("Receive line:%s\n", buf);
 
         int desirable_size = tmp_cur_size + len;
         if (desirable_size > tmp_max_size) 
@@ -699,7 +675,7 @@ int read_requesthdrs(int clit_fd, char *host, int* port)
         strcpy(key, buf);
         strcpy(value, tmp + 2);
         value[strlen(value) - 2] = '\0';
-        //fprintf(stderr, "key = %s, value = %s\n", key, value);
+		
         *tmp = ':';
         if (!strcmp(key, "Host")) 
 		{
@@ -724,11 +700,6 @@ int read_requesthdrs(int clit_fd, char *host, int* port)
     return host_flag;
 }
 
-/** @brief 
- *  @param 
- *  @param
- *  @return the type of the response
- */
 void read_responeshdrs(int serv_fd, response_t* res) 
 {
     int len = 0;
@@ -812,45 +783,10 @@ void read_responeshdrs(int serv_fd, response_t* res)
     res->hdr_len = tmp_cur_size;
     res->hdr_buf = tmp_buf;
     return;
-    /*
-    int sendret = io_sendn(clit_fd, tmp_buf, tmp_cur_size);
-    if (sendret != tmp_cur_size) 
-	{
-        DPRINTF("Unsuccessfully forward repsonse\n");
-    }
-	else 
-	{
-        DPRINTF("Successfully forward response\n");
-    }
-    free(tmp_buf);
-    DPRINTF("leaving read request\n");
-    return; */
+
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- * clienterror - returns an error message to the client
- */
-/* $begin clienterror */
 void clienterror(int fd, char *cause, char *errnum, 
 		 char *shortmsg, char *longmsg) 
 {
@@ -892,12 +828,9 @@ bit_t* process_list(int serv_fd, int length)
     buf = (char *)malloc(length + 1);
     resvret = io_recvn_block(serv_fd, buf, length);
     if (resvret != length) 
-{
         DPRINTF("Short read occured while reading list, ret = %d\n", resvret);
-    } else 
-{
+	else 
         DPRINTF("Successfully read list\n");
-    }
 
 
     bitrates = parse_xml(buf, length);
@@ -911,21 +844,22 @@ bit_t* process_list(int serv_fd, int length)
 void ask_for_nolist(int serv_fd, int clit_idx, int close) 
 {
     if (!close) 
-{
+	{
         io_sendn(serv_fd, nolist_buf, strlen(nolist_buf));
         io_sendn(serv_fd, user_agent_hdr, strlen(user_agent_hdr));
         io_sendn(serv_fd, accept_hdr, strlen(accept_hdr));
         io_sendn(serv_fd, accept_encoding_hdr, strlen(accept_encoding_hdr));
         io_sendn(serv_fd, connection_hdr, strlen(connection_hdr));
         io_sendn(serv_fd, pxy_connection_hdr, strlen(pxy_connection_hdr));
-    } else 
-{
+    }
+	else 
+	{
         int serv_idx, conn_idx;
         struct addrinfo *servinfo;
         struct sockaddr_in sa;
         char ip_str[INET_ADDRSTRLEN];
         if (pool.www_ip) 
-{
+		{
             inet_pton(AF_INET, pool.www_ip, &(sa.sin_addr));
             DPRINTF("about to get conn\n");
 
@@ -936,8 +870,9 @@ void ask_for_nolist(int serv_fd, int clit_idx, int close)
             conn_idx = add_conn(clit_idx, serv_idx);
             DPRINTF("new connection:%d add!\n",conn_idx);     
     
-        } else 
-{
+        }
+		else 
+		{
             resolve(VIDEO_HOST, VIDEO_PORT, NULL, &servinfo);
             struct sockaddr_in *serv_addrin = (struct sockaddr_in*)servinfo->ai_addr;
             inet_ntop(AF_INET, &(serv_addrin->sin_addr), ip_str, sizeof(ip_str));
