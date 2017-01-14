@@ -18,7 +18,7 @@ ssize_t io_sendn(int fd, const char *ubuf, size_t n)
 				nsend = 0;    // and call send() again
 			else if (errno == EPIPE) 
 			{
-				DPRINTF("EPIPE handled\n");
+				DEBUGPRINT("EPIPE handled\n");
 				return -1;
 			} 
 			else if (errno == EAGAIN) 
@@ -28,7 +28,7 @@ ssize_t io_sendn(int fd, const char *ubuf, size_t n)
 			else 
 			{
 				/* errorno set by send() */
-				DPRINTF("send error on %s\n", strerror(errno));
+				DEBUGPRINT("send error on %s\n", strerror(errno));
 				return -1;
 			}
 		}
@@ -53,19 +53,19 @@ ssize_t io_recvn(int fd, char *buf, size_t n)
 	{
 		if (errno == EAGAIN || errno == EWOULDBLOCK)
 		{
-			DPRINTF("read entire buffer\n");
-			DPRINTF("read:%d\n",res );
+			DEBUGPRINT("read entire buffer\n");
+			DEBUGPRINT("read:%d\n",res );
 			return res;
 		}
 		else 
 		{
-			DPRINTF("recv error on %s\n", strerror(errno));
+			DEBUGPRINT("recv error on %s\n", strerror(errno));
 			return -1;
 		}
 	}
 	if (nread == 0) 
 	{
-		DPRINTF("recv error on 0\n");
+		DEBUGPRINT("recv error on 0\n");
 		return -1;
 	}
 
@@ -85,7 +85,7 @@ ssize_t io_recvn_block(int fd, char *buf, int n)
 			continue;
 		else if (nread == -1) 
 		{
-			DPRINTF("BLock recv error on %s\n", strerror(errno));
+			DEBUGPRINT("BLock recv error on %s\n", strerror(errno));
 			return -1;
 		}
 		res += nread;
@@ -110,7 +110,7 @@ ssize_t io_recvlineb(int fd, void *usrbuf, size_t maxlen)
 		} 
 		else if (rc == 0) 
 		{
-			DPRINTF("recv hdr = 0!\n");	
+			DEBUGPRINT("recv hdr = 0!\n");	
 			if (n == 1)
 				return 0; /* EOF, no data read */
 			else
@@ -120,11 +120,11 @@ ssize_t io_recvlineb(int fd, void *usrbuf, size_t maxlen)
 		{
 			if (errno == EWOULDBLOCK || errno == EAGAIN) 
 			{
-				DPRINTF("read entire buffer once");
+				DEBUGPRINT("read entire buffer once");
 				break;
 			}
 			/* error */
-			DPRINTF("recv error on %s\n", strerror(errno));
+			DEBUGPRINT("recv error on %s\n", strerror(errno));
 			return -1;
 		}
 	}
@@ -148,15 +148,15 @@ ssize_t io_recvline_block(int fd, void *usrbuf, size_t maxlen)
 		} 
 		else if (rc == 0) 
 		{
-			DPRINTF("recv hdr = 0!\n");	
+			DEBUGPRINT("recv hdr = 0!\n");	
 			if (n == 1) 
 			{
-				DPRINTF("recv() return 0, with no data read\n");
+				DEBUGPRINT("recv() return 0, with no data read\n");
 				return 0; /* EOF, no data read */
 			}
 			else
 			{
-				DPRINTF("recv() return 0, with some data read\n");
+				DEBUGPRINT("recv() return 0, with some data read\n");
 				return n; /* EOF, some data was read */
 			}
 		} 
@@ -164,11 +164,11 @@ ssize_t io_recvline_block(int fd, void *usrbuf, size_t maxlen)
 		{
 			if (errno == EWOULDBLOCK || errno == EAGAIN) 
 			{
-				DPRINTF("read entire buffer once\n");
+				DEBUGPRINT("read entire buffer once\n");
 				continue;
 			}
 			/* error */
-			DPRINTF("recv error on %s\n", strerror(errno));
+			DEBUGPRINT("recv error on %s\n", strerror(errno));
 			return -1;
 		}
 	}

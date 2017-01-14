@@ -22,7 +22,7 @@ void init_pool(int listen_sock, pool_t *p, char** argv)
     pool.log_file = fopen(argv[1],"w");
     if (pool.log_file == NULL) 
 	{
-        DPRINTF("failed to open log file!\n");
+        DEBUGPRINT("failed to open log file!\n");
         exit(-1);
     }
     pool.fake_ip = argv[4];
@@ -101,7 +101,7 @@ int open_server_socket(char *fake_ip, char *www_ip, int port)
     rc = bind(serverfd, (struct sockaddr *)&fake_addr, sizeof(fake_addr));
     if (rc < 0) 
 	{
-        DPRINTF("Bind server sockt error!");
+        DEBUGPRINT("Bind server sockt error!");
         return -1;
     }
 
@@ -115,7 +115,7 @@ int open_server_socket(char *fake_ip, char *www_ip, int port)
     if (rc < 0) 
 	{
         // handle error
-        DPRINTF("Connect error!\n");
+        DEBUGPRINT("Connect error!\n");
         return -1;
     }
 
@@ -240,7 +240,7 @@ int update_client(int sock, uint32_t addr)
     }
 
     // should never reach here!
-    DPRINTF("wants to update, but no client found!\n");
+    DEBUGPRINT("wants to update, but no client found!\n");
     return -1;   
 }
 
@@ -259,13 +259,13 @@ int update_server(int sock, uint32_t addr)
             return 0;
         }
     }
-    DPRINTF("wants to update, but no server found!\n");
+    DEBUGPRINT("wants to update, but no server found!\n");
     return -1;
 }
 
 void close_clit(int clit_idx) 
 {
-    DPRINTF("close client:%d\n",clit_idx);
+    DEBUGPRINT("close client:%d\n",clit_idx);
     client_t *client = GET_CLIT_BY_IDX(clit_idx);
     close_socket(client->fd);
     FD_CLR(client->fd, &(pool.read_nrdy));
@@ -277,7 +277,7 @@ void close_clit(int clit_idx)
 
 void close_serv(int serv_idx) 
 {
-    DPRINTF("close server:%d\n",serv_idx);
+    DEBUGPRINT("close server:%d\n",serv_idx);
     server_t *server = GET_SERV_BY_IDX(serv_idx);
     close_socket(server->fd);
     FD_CLR(server->fd, &(pool.read_nrdy));
@@ -290,10 +290,10 @@ void close_serv(int serv_idx)
 
 int close_socket(int sock) 
 {
-    DPRINTF("Close sock %d\n", sock);
+    DEBUGPRINT("Close sock %d\n", sock);
     if (close(sock)) 
 	{
-        DPRINTF("Failed closing socket.\n");
+        DEBUGPRINT("Failed closing socket.\n");
         return 1;
     }
     return 0;

@@ -3,7 +3,7 @@ CFLAGS = -Wall -g -Ilibxml2 -I/usr/local/include/libxml2/
 LDFLAGS = -Llibs -lxml2 -lm
 CC = gcc
 
-objects = media.o connection.o xml_parser.o timer.o log.o pool.o sock.o mydns.o proxy.o 
+objects = movie.o connection.o xml_parser.o timer.o pool.o sock.o mydns.o proxy.o 
 .PHONY: default clean clobber handin
 
 
@@ -29,15 +29,15 @@ proxy: $(objects)
 
 xml_parser.o: xml_parser.c xml_parser.h
 timer.o: timer.c timer.h
-log.o: log.c log.h
 pool.o: pool.c pool.h
 connection.o: connection.c connection.h
 sock.o: sock.c sock.h
-media.o: media.c media.h
-proxy.o: proxy.c pool.h mydns.h debug.h sock.h media.h connection.h timer.h log.h xml_parser.h
+moive.o: movie.c movie.h
+proxy.o: proxy.c pool.h mydns.h debug.h sock.h movie.h connection.h timer.h xml_parser.h
+ospf.o: ospf.c ospf.h
 mydns.o: mydns.c mydns.h debug.h
 nameserver.o: nameserver.c nameserver.h mydns.h debug.h ospf.h
-ospf.o: ospf.c ospf.h
+
 
 dnstest.o: dnstest.c mydns.h
 

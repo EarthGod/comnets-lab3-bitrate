@@ -1,5 +1,5 @@
-#ifndef _MEDIA_H
-#define _MEDIA_H
+#ifndef _MOVIE_H
+#define _MOVIE_H
 
 #include <sys/time.h>
 #include <sys/socket.h>
@@ -13,7 +13,7 @@
 #define MAX_TITLE_LENGTH  100
 #define MAX_BITRATE_LENGTH 10
 
-//define structure for a movie
+
 typedef struct movie_s 
 {
 	char* title;
@@ -21,7 +21,7 @@ typedef struct movie_s
 	struct movies_s* next;
 } movie_t;
 
-//define structure for a servlist
+
 typedef struct serv_list_s 
 {
 	uint32_t addr;

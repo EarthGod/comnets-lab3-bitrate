@@ -21,11 +21,7 @@
 #define DATALEN 34 // The longest data length for this proj
 #define BUFSIZE 8192
 
-/**
- *  The struct for DNS service on client side.
- *  dns_sock - a socket used for UDP communication
- *  servaddr - the address of DNS server. 
- */
+
 typedef struct dns_s {
 	int sock;
 	struct sockaddr_in servaddr;
@@ -92,11 +88,7 @@ typedef struct query_s {
     char* qname;
     question_t* question;
 } query_t;
-/**
- *  The struct for DNS packet.
- *  header - The header of dns pkt
- *  data - The content of dns pkt
- */
+
 typedef struct data_packet {
     header_t* header;
     query_t* query;
@@ -142,14 +134,7 @@ int init_mydns(const char* dns_ip, unsigned int dns_port, const char* local_ip);
 
 int resolve(const char* node, const char* service, const struct addrinfo* hints, struct addrinfo** res);
 
-/**
- * Generate a DNS query. It is used to ask DNS server for a specific domain address
- *
- * @param  node  The hostname to resolve.
- * @param  service  The desired port number as a string.
- *
- * @return a query pkt if succeed, NULL if failed 
- */
+
 data_packet_t* make_query_pkt(const char* node);
 
 

@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 	init_ref();
 	if ((fd = init_udp(ip, port, &read_nrdy)) == -1) 
 	{
-		DPRINTF("fail to initialize UDP!\n");
+		DEBUGPRINT("fail to initialize UDP!\n");
 		exit(-1);
 	}
 	
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 		
 		if (nready == -1) 
 		{
-			DPRINTF("Select error on %s\n", strerror(errno));
+			DEBUGPRINT("Select error on %s\n", strerror(errno));
 			close(fd);
 			exit(-1);
 		}
@@ -110,7 +110,7 @@ int init_udp(char* ip, int port, fd_set* read_nrdy)
 	struct sockaddr_in myaddr;
 	if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP)) == -1) 
 	{
-		DPRINTF("init_udp could not create socket");
+		DEBUGPRINT("init_udp could not create socket");
 		exit(-1);
 	}
 	
@@ -125,7 +125,7 @@ int init_udp(char* ip, int port, fd_set* read_nrdy)
 	
 	if (bind(sock, (struct sockaddr *) &myaddr, sizeof(myaddr)) == -1) 
 	{
-		DPRINTF("init_udp could not bind socket\n");
+		DEBUGPRINT("init_udp could not bind socket\n");
 		exit(-1);
 	}
 
@@ -174,7 +174,7 @@ void serve(int fd, int rr_flag)
 	else 
 	{
 		// read error from udp
-		DPRINTF("read error from UDP!\n");
+		DEBUGPRINT("read error from UDP!\n");
 		exit(-1);
 	}
 }

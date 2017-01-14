@@ -5,8 +5,5 @@ all:
 clean:
 	rm proxy;rm nameserver;cd src;make clean
 
-clobber: clean
-	cd src; make clobber
-
 handin:
-	make clean; cd ..; tar cvf handin.tar handin
+	make clean; cd ..; tar cvf 1400012849&1400012837_handin.tar handin

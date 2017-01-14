@@ -19,11 +19,11 @@ int init_mydns(const char* dns_ip, unsigned int dns_port, const char* local_ip)
 	int sock, yes = 1;
 	struct sockaddr_in myaddr;
 	
-	DPRINTF("Entering init_mydns\n");
+	DEBUGPRINT("Entering init_mydns\n");
 	
 	if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP)) == -1) 
 	{
-		DPRINTF("init_mydns could not create socket");
+		DEBUGPRINT("init_mydns could not create socket");
 		exit(-1);
 	}
 	
@@ -37,7 +37,7 @@ int init_mydns(const char* dns_ip, unsigned int dns_port, const char* local_ip)
 	
 	if (bind(sock, (struct sockaddr *) &myaddr, sizeof(myaddr)) == -1) 
 	{
-		DPRINTF("init_mydns could not bind socket, %s\n", strerror(errno));
+		DEBUGPRINT("init_mydns could not bind socket, %s\n", strerror(errno));
 		exit(-1);
 	}
 	
@@ -48,7 +48,7 @@ int init_mydns(const char* dns_ip, unsigned int dns_port, const char* local_ip)
 	dns.servaddr.sin_port = htons(dns_port);
 	inet_pton(AF_INET, dns_ip, &(dns.servaddr.sin_addr));
 	
-	DPRINTF("Exiting init_mydns\n");
+	DEBUGPRINT("Exiting init_mydns\n");
 	return 0;
 }
 
@@ -120,7 +120,7 @@ int parse_res(char* req_buf, char* res_buf, struct addrinfo* tmp, int length)
 
 	if (memcmp(req_buf, res_buf, length)) 
 	{
-		DPRINTF("parse_res: Incorrect response!\n");
+		DEBUGPRINT("parse_res: Incorrect response!\n");
 		return -1;
 	}
 
@@ -295,24 +295,24 @@ int resolve(const char *node, const char *service, const struct addrinfo *hints,
 	// generate query pkt
 	if((pkt	= make_query_pkt(node)) == NULL) 
 	{
-		DPRINTF("failed to generate query!\n");
+		DEBUGPRINT("failed to generate query!\n");
 		return 0;
 	}
 
 	pkt_len = pktToBuf(buf, pkt);
-	DPRINTF("About to send\n");
+	DEBUGPRINT("About to send\n");
 	// send query to DNS server
 	sendto(dns.sock, buf, pkt_len, 0, (struct sockaddr *)&dns.servaddr, 
 				sizeof(dns.servaddr));
-	DPRINTF("Send DNS\n");
+	DEBUGPRINT("Send DNS\n");
 
 	// recv response from DNS server
 	recvlen = recvfrom(dns.sock, res_buf,
 		BUFSIZE, 0, (struct sockaddr *)&from, &fromlen);
-	DPRINTF("Recv DNS\n");
+	DEBUGPRINT("Recv DNS\n");
 	if (recvlen == -1) 
 	{
-		DPRINTF("DNS recv error: %s\n", strerror(errno));
+		DEBUGPRINT("DNS recv error: %s\n", strerror(errno));
 		free_pkt(pkt);
 		return -1;
 	}
@@ -320,7 +320,7 @@ int resolve(const char *node, const char *service, const struct addrinfo *hints,
 	// parse response
 	if (parse_res(buf, res_buf, tmp, pkt_len) != 0 ) 
 	{
-		DPRINTF("Fail to parse DNS response!");
+		DEBUGPRINT("Fail to parse DNS response!");
 		free_pkt(pkt);
 		return -1;
 	}

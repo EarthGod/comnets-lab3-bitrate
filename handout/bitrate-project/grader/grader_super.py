@@ -2,7 +2,6 @@
 
 import sys
 sys.path.append('../common')
-sys.path.append('../dns')
 
 import os
 import json
@@ -13,20 +12,15 @@ import time
 import random
 from threading import Thread
 from util import check_output, check_both, run_bg
-from dns_common import sendDNSQuery
 
 NETSIM = '../netsim/netsim.py'
 VIDEO_SERVER_NAME = 'video.cs.cmu.edu'
 PROXY = '../../handin/proxy'
-NAMESERVER = '../../handin/nameserver'
-WRITEUP = '../../handin/writeup.pdf'
 LARGE_FOLDER = '/var/www/vod/large'
 
 class Project3Test(unittest.TestCase):
-
-    def __init__(self, test_name, topo_dir=None):
-        super(Project3Test, self).__init__(test_name)
-        self.topo_dir = topo_dir
+    def __init__(self):
+        self.topo_dir = "./topos/one-client"
         self.exc_info = []
 
     ########### SETUP/TEARDOWN ##########
@@ -63,10 +57,6 @@ class Project3Test(unittest.TestCase):
         check_both('rm %s' % log, False, False)
         run_bg('%s %s %s %s %s %s %s %s'\
             % (PROXY, log, alpha, listenport, fakeip, dnsip, dnsport, serverip))
-
-    def run_dns(self, rr, log, listenip, listenport, serverfile, lsafile):
-        run_bg('%s %s %s %s %s %s %s'\
-            % (NAMESERVER, rr, log, listenip, listenport, serverfile, lsafile))
 
     def run_events(self, events_file=None, bg=False):
         cmd = '%s %s run' % (NETSIM, self.topo_dir)
@@ -186,60 +176,31 @@ class Project3Test(unittest.TestCase):
 
 
     ########### TEST CASES ##########
-    def test_dns_rr(self):
-        DNS_LOG = "dns_rr.log"
-        server_file = os.path.join(self.topo_dir, 'rr-dns.servers')
-        lsa_file = os.path.join(self.topo_dir, 'rr-dns.lsa')
-        self.run_dns('-r', DNS_LOG, '127.0.0.1', self.dnsport, server_file, lsa_file)
-        time.sleep(1)
 
-        self.print_log(DNS_LOG)
-
-        servers = ['2.0.0.1', '3.0.0.1', '4.0.0.1', '5.0.0.1', '6.0.0.1']
-        for i in xrange(100):
-            [query, response, flags] = sendDNSQuery(VIDEO_SERVER_NAME, '127.0.0.1', '127.0.0.1', self.dnsport)
-            print response
-            self.assertTrue(response == servers[i%len(servers)])
-
-    def test_dns_lsa_topo1(self):
-        DNS_LOG = "dns_lsa_topo1.log"
-        server_file = os.path.join(self.topo_dir, 'topo1.servers')
-        lsa_file = os.path.join(self.topo_dir, 'topo1.lsa')
-        self.run_dns('', DNS_LOG, '5.0.0.1', self.dnsport, server_file, lsa_file)
-        time.sleep(1)
-        self.print_log(DNS_LOG)
-
-        servers = ['3.0.0.1', '4.0.0.1']
-        for i in xrange(5):
-            [query, response, flags] = sendDNSQuery(VIDEO_SERVER_NAME, '1.0.0.1', '5.0.0.1', self.dnsport)
-            print response
-            self.assertTrue(response in servers)
-
-        for i in xrange(5):
-            [query, response, flags] = sendDNSQuery(VIDEO_SERVER_NAME, '2.0.0.1', '5.0.0.1', self.dnsport)
-            print response
-            self.assertTrue(response in servers)
-
-def emit_scores(test_results, test_values, test_categories):
-
-    # Initialization
-    test_scores = {}
-    category_scores = {}
-    for test, value in test_values.iteritems():
-        test_scores[test] = test_values[test]  # start w/ max; deduct later
-        category_scores[test_categories[test]] = 0  # init category scores to 0
-
-    # Deduct points for failed tests
-    failed = test_results.failures + test_results.errors
-    for testcase in failed:
-        test = testcase[0].id().split('.')[-1]
-        test_scores[test] = 0
+    def test_proxy_simple(self):
+        PROXY_LOG = 'proxy.log'
+        self.run_proxy(PROXY_LOG, '1', self.proxyport1, '1.0.0.1', '0.0.0.0', '0', '2.0.0.1')
+        self.run_events(os.path.join(self.topo_dir, 'simple.events'))
+        self.check_gets('1.0.0.1', self.proxyport1, 10, 'proxy.log', 900, 500)
+        self.print_log(PROXY_LOG)
+        self.check_errors()
+        print 'done test_proxy_simple'
+    
+    def test_proxy_adaptation(self):
+        PROXY_LOG = 'proxy.log'
+        self.run_proxy(PROXY_LOG, '1', self.proxyport1, '1.0.0.1', '0.0.0.0', '0', '2.0.0.1')
+        self.run_events(os.path.join(self.topo_dir, 'adaptation-2000.events')) 
+        self.check_gets('1.0.0.1', self.proxyport1, 10, PROXY_LOG, 2000, 1000)
+        self.run_events(os.path.join(self.topo_dir, 'adaptation-900.events')) 
+        self.check_gets('1.0.0.1', self.proxyport1, 10, PROXY_LOG, 900, 500)
+        self.print_log(PROXY_LOG)
+        self.check_errors()
+        print 'done test_proxy_adaptation'
 
 
-    # Sum category scores
-    for test, score in test_scores.iteritems():
-        category_scores[test_categories[test]] += score
+proj3 = Project3Test()
+proj3.setUp()
+proj3.test_proxy_simple()
 
-    print test_scores  # for student's log
-    autolab_wrapper = { 'scores':category_scores }
-    print json.dumps(autolab_wrapper)  # for autolab
+proj3.setUp()
+proj3.test_proxy_adaptation()

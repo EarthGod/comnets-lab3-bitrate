@@ -1,6 +1,6 @@
 #include "connection.h"
 #include "pool.h"
-#include "media.h"
+#include "movie.h"
 #include "timer.h"
 
 extern pool_t pool;
@@ -94,7 +94,7 @@ int update_conn(int clit_idx, int serv_idx)
 			conn_l[i]->alive = 1;
 	}
 	//NO CONNECTION FOUND
-	DPRINTF("wants to update, but no connection found!\n");
+	DEBUGPRINT("wants to update, but no connection found!\n");
 	return -1;
 }
 
@@ -134,12 +134,12 @@ int update_thruput(int sum, conn_t* conn, thruputs_t* thru)
 	float alpha = pool.alpha;
 	
 	elapsed = get_diff(&(conn->start),&(conn->end));
-	DPRINTF("elapsed = %lf", elapsed);
+	DEBUGPRINT("elapsed = %lf", elapsed);
 	new_thruput = ((sum / 1000 * 8)) / elapsed;
 	conn->t_put = (int)new_thruput;
 	
 	curr_thruput = thru->avg_put;
-	DPRINTF(" Old: %d, New: %f, alpha: %f\n", curr_thruput, new_thruput, alpha);
+	DEBUGPRINT(" Old: %d, New: %f, alpha: %f\n", curr_thruput, new_thruput, alpha);
 
 	//calculating new throughput
 	if (curr_thruput != 0)

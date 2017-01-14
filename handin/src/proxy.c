@@ -7,10 +7,9 @@
 #include <sys/time.h>
 #include "pool.h"
 #include "sock.h"
-#include "media.h"
+#include "movie.h"
 #include "connection.h"
 #include "timer.h"
-#include "log.h"
 #include "xml_parser.h"
 
 
@@ -25,7 +24,7 @@
 pool_t pool; 
 bit_t* bitrates;
 char nolist_buf[MAXLINE];
-
+void loggin(conn_t* conn, thruputs_t* thru);
 int parse_uri(char *uri, char *host, int *port, char *path);
 void clienterror(int fd, char *cause, char *errnum, char *shortmsg, char *longmsg);
 int read_requesthdrs(int clit_fd, char *host, int* port);
@@ -63,7 +62,7 @@ int main(int argc, char **argv)
 
     if (argc != 7 && argc != 8) 
 	{
-        DPRINTF("%d",argc);
+        DEBUGPRINT("%d",argc);
         usage();
         exit(EXIT_FAILURE);
     }
@@ -90,14 +89,14 @@ int main(int argc, char **argv)
     listen_sock = open_listen_socket(lis_port);
     if (listen_sock < 0) 
 	{
-        DPRINTF("open_listen_socket: error!");
+        DEBUGPRINT("open_listen_socket: error!");
         exit(EXIT_FAILURE);
     }
     init_pool(listen_sock, &pool, argv);
 
     memset(&cli_addr, 0, sizeof(struct sockaddr));
     memset(&cli_size, 0, sizeof(socklen_t));
-    DPRINTF("----- Proxy Start -----\n");
+    DEBUGPRINT("----- Proxy Start -----\n");
     
     while (1) 
 	{
@@ -108,7 +107,7 @@ int main(int argc, char **argv)
         if (pool.nready == -1) 
 		{
             /* Something wrong with select */
-            DPRINTF("Select error on %s\n", strerror(errno));
+            DEBUGPRINT("Select error on %s\n", strerror(errno));
             clean_state(&pool, listen_sock);
         }
         if (FD_ISSET(listen_sock, &pool.read_rdy) && pool.cur_conn <= FD_SETSIZE) 	
@@ -117,11 +116,11 @@ int main(int argc, char **argv)
             if ((client_sock = accept(listen_sock, (struct sockaddr *) &cli_addr, &cli_size)) == -1) 
 			{
                 close_socket(listen_sock);
-                DPRINTF("Error accepting connection.\n");
+                DEBUGPRINT("Error accepting connection.\n");
                 continue;
             }
             
-            DPRINTF("New client %d accepted\n", client_sock);
+            DEBUGPRINT("New client %d accepted\n", client_sock);
             int nonblock_flags = fcntl(client_sock,F_GETFL,0);
             fcntl(client_sock, F_SETFL,nonblock_flags|O_NONBLOCK);
             
@@ -154,6 +153,28 @@ void serve_servers()
     } 
 }
 
+void loggin(conn_t* conn, thruputs_t* thru) 
+{
+	time_t since_epoch;
+	since_epoch = time(NULL);
+	double secs = get_diff(&(conn->start),&(conn->end));
+	FILE* logfile = pool.log_file;
+	server_t* server = pool.server_l[conn->serv_idx];
+	
+	struct in_addr ip_addr;
+	ip_addr.s_addr = server->addr;
+
+	fprintf(logfile, "%ld ", since_epoch);
+	fprintf(logfile, "%lf ", secs);
+	fprintf(logfile, "%d ", conn->t_put);
+	fprintf(logfile, "%d ", thru->avg_put);
+	fprintf(logfile, "%d ", conn->cur_bitrate);
+	fprintf(logfile, "%s ", inet_ntoa(ip_addr));
+	fprintf(logfile, "%s\n", conn->cur_file );
+
+	fflush(pool.log_file);
+}
+
 void serve_clients() 
 {
     int i;
@@ -168,7 +189,7 @@ void serve_clients()
         client = client_l[i];
         if(FD_ISSET(client->fd, &(pool.read_rdy))) 
 		{
-            DPRINTF("Client fd = %d, index = %d\n", client->fd, i);
+            DEBUGPRINT("Client fd = %d, index = %d\n", client->fd, i);
             client2server(i);
             pool.nready--;
         }
@@ -206,14 +227,14 @@ void client2server(int clit_idx)
 
     if (strcmp(buf, "") == 0) 
 	{
-        DPRINTF("Empty buffer\n");
+        DEBUGPRINT("Empty buffer\n");
         return;
     }
 
     sscanf(buf, "%s %s %s", method, uri, version);
     if (strcasecmp(method, "GET")) 
 	{ 
-        DPRINTF("501 Not Implemented\n");
+        DEBUGPRINT("501 Not Implemented\n");
         clienterror(fd, method, "501", "Not Implemented", "method not implemented");
         return;
     }
@@ -224,7 +245,7 @@ void client2server(int clit_idx)
     /* Parse URI from GET request */
     if (!parse_uri(uri, host, &port, path)) 
 	{
-        DPRINTF("404 Not found\n");
+        DEBUGPRINT("404 Not found\n");
 		clienterror(fd, uri, "404", "Not found", "Couldn't parse the request");
 		return;
     }
@@ -233,15 +254,15 @@ void client2server(int clit_idx)
     if (pool.www_ip) 
 	{
         inet_pton(AF_INET, pool.www_ip, &(sa.sin_addr));
-        DPRINTF("about to get conn\n");
+        DEBUGPRINT("about to get conn\n");
 
         if ((conn_idx = client_get_conn(fd, sa.sin_addr.s_addr)) == -1) 
 		{
             serv_fd = open_server_socket(pool.fake_ip, pool.www_ip, 8080);
             serv_idx = add_server(serv_fd, sa.sin_addr.s_addr);
-            DPRINTF("new server:%d add!\n", serv_fd);
+            DEBUGPRINT("new server:%d add!\n", serv_fd);
             conn_idx = add_conn(clit_idx, serv_idx);
-            DPRINTF("new connection:%d add!\n", conn_idx);     
+            DEBUGPRINT("new connection:%d add!\n", conn_idx);     
         } 
     } 
 	else 
@@ -249,14 +270,14 @@ void client2server(int clit_idx)
         resolve(VIDEO_HOST, VIDEO_PORT, NULL, &servinfo);
         struct sockaddr_in *serv_addrin = (struct sockaddr_in*)servinfo->ai_addr;
         inet_ntop(AF_INET, &(serv_addrin->sin_addr), ip_str, sizeof(ip_str));
-        DPRINTF("Server IP resolved: %s\nabout to get conn\n", ip_str);
+        DEBUGPRINT("Server IP resolved: %s\nabout to get conn\n", ip_str);
         if((conn_idx = client_get_conn(fd, serv_addrin->sin_addr.s_addr)) == -1) 
 		{
             serv_fd = open_server_socket(pool.fake_ip,ip_str, 8080);
             serv_idx = add_server(serv_fd,serv_addrin->sin_addr.s_addr);
-            DPRINTF("new server:%d add!\n",serv_fd);
+            DEBUGPRINT("new server:%d add!\n",serv_fd);
             conn_idx = add_conn(clit_idx, serv_idx);
-            DPRINTF("new connection:%d add!\n",conn_idx);
+            DEBUGPRINT("new connection:%d add!\n",conn_idx);
         }
     }
     
@@ -268,7 +289,7 @@ void client2server(int clit_idx)
 
     if (client_close == -1) 
 	{
-        DPRINTF("read_requesthdrs return error!!!\n");
+        DEBUGPRINT("read_requesthdrs return error!!!\n");
         close_conn(conn_idx);
         return;
     }
@@ -292,8 +313,8 @@ void client2server(int clit_idx)
     }
 	else if (isVideo(path)) 
 	{
-        DPRINTF("This is video req: Idx:%d; Curr thru: %d\n",conn_idx, conn->avg_put);
-        DPRINTF("Path=%s\n", path);
+        DEBUGPRINT("This is video req: Idx:%d; Curr thru: %d\n",conn_idx, conn->avg_put);
+        DEBUGPRINT("Path=%s\n", path);
         bit_t *b = bitrates;
         int chosen_rate = 0;
         int avg_thru = thru->avg_put / 1.5;
@@ -313,9 +334,9 @@ void client2server(int clit_idx)
         modi_path(path, chosen_rate, conn);
     }
 
-    DPRINTF("uri = \"%s\"\n", uri);
-    DPRINTF("host = \"%s\", ", host);
-    DPRINTF("port = \"%d\", ", port);
+    DEBUGPRINT("uri = \"%s\"\n", uri);
+    DEBUGPRINT("host = \"%s\", ", host);
+    DEBUGPRINT("port = \"%d\", ", port);
 
 	/* Forward request */
     sprintf(buf_internet, "GET %s HTTP/1.1\r\n", path);
@@ -331,7 +352,7 @@ void client2server(int clit_idx)
     
     if (flag != FLAG_LIST)
 	{
-        DPRINTF("This is no a f4m request, done\n");
+        DEBUGPRINT("This is no a f4m request, done\n");
         return;  
     }
     if (flag == FLAG_LIST)
@@ -359,7 +380,7 @@ void server2client(int serv_idx)
     // get connection 
     if ((conn_idx = server_get_conn(server_fd)) == -1) 
 	{
-        DPRINTF("Cannot find connection from server to client! Error\n");
+        DEBUGPRINT("Cannot find connection from server to client! Error\n");
         close_conn(conn_idx);
         return;
     }
@@ -384,7 +405,7 @@ void server2client(int serv_idx)
         n = io_recvn_block(server_fd, buf_internet, res.length);
         if (n != res.length) 
 		{
-            DPRINTF("Unsuccessfully recv XML from server:%d, n = %d, length should be %d\n", server_fd, n, res.length);
+            DEBUGPRINT("Unsuccessfully recv XML from server:%d, n = %d, length should be %d\n", server_fd, n, res.length);
             close_conn(conn_idx);
             return;
         }
@@ -416,14 +437,14 @@ void server2client(int serv_idx)
         n = io_sendn(client_fd, res.hdr_buf, res.hdr_len);
         if (n != res.hdr_len) 
 		{
-            DPRINTF("Unsuccessfully forward hdr:%d, n = %d, length should be %d\n", client_fd, n, res.hdr_len);
+            DEBUGPRINT("Unsuccessfully forward hdr:%d, n = %d, length should be %d\n", client_fd, n, res.hdr_len);
             close_conn(conn_idx);
             return;
         }
         n = io_sendn(client_fd, buf_internet, res.length);
         if (n != res.length) 
 		{
-            DPRINTF("Unsuccessfully forward nolist XML:%d, n = %d, length should be %d\n", client_fd, n, res.hdr_len);
+            DEBUGPRINT("Unsuccessfully forward nolist XML:%d, n = %d, length should be %d\n", client_fd, n, res.hdr_len);
             close_conn(conn_idx);
             return;
         }
@@ -434,7 +455,7 @@ void server2client(int serv_idx)
     n = io_sendn(client_fd, res.hdr_buf, res.hdr_len);
     if (n != res.hdr_len) 
 	{
-        DPRINTF("Unsuccessfully forward hdr:%d, n = %d, length should be %d\n", client_fd, n, res.hdr_len);
+        DEBUGPRINT("Unsuccessfully forward hdr:%d, n = %d, length should be %d\n", client_fd, n, res.hdr_len);
         close_conn(conn_idx);
         return;
     }
@@ -453,20 +474,20 @@ void server2client(int serv_idx)
         update_thruput(res.length, conn, thru);
     loggin(conn, thru); 
 
-    DPRINTF("Successfully recv body from server:%d, n = %d,len = %d\n", server_fd, n, res.length);
+    DEBUGPRINT("Successfully recv body from server:%d, n = %d,len = %d\n", server_fd, n, res.length);
     n = io_sendn(client_fd, buf_internet, res.length);
     if (n == -1) 
 	{
         close_conn(conn_idx);
         return;
     }
-    DPRINTF("Send %d bytes to clit %d, should be %d\n", n, client_fd, res.length);
+    DEBUGPRINT("Send %d bytes to clit %d, should be %d\n", n, client_fd, res.length);
    
     free(buf_internet);
     free(res.hdr_buf);
     res.hdr_buf = NULL;
-    DPRINTF("finish transimit content!\n");
-    DPRINTF("Forward respond %d bytes\n", n);
+    DEBUGPRINT("finish transimit content!\n");
+    DEBUGPRINT("Forward respond %d bytes\n", n);
 }
 
 
@@ -484,12 +505,12 @@ int parse_uri(char *uri, char *host, int *port, char *path)
     int i;
 
     ptr = uri;
-    DPRINTF("About to parse URI\n");
-    DPRINTF("URI: %s\n", uri);
+    DEBUGPRINT("About to parse URI\n");
+    DEBUGPRINT("URI: %s\n", uri);
     tmp = strchr(ptr, ':');
     if (NULL == tmp) 
 	{ 
-    	DPRINTF("No scheme exists:%s\n",ptr);
+    	DEBUGPRINT("No scheme exists:%s\n",ptr);
         strcpy(path, ptr);
         return 1;
     }
@@ -577,7 +598,7 @@ int read_requesthdrs(int clit_fd, char *host, int* port)
     tmp_buf = (char *)malloc(MAXLINE);
     int host_flag = -1;
 
-    DPRINTF("entering read req hdrs:%d\n", clit_fd);
+    DEBUGPRINT("entering read req hdrs:%d\n", clit_fd);
 
     while (1)
 	{
@@ -614,12 +635,12 @@ int read_requesthdrs(int clit_fd, char *host, int* port)
         *tmp = ':';
         if (!strcmp(key, "Host")) 
 		{
-            DPRINTF("get host!\n");
+            DEBUGPRINT("get host!\n");
             host_flag = 1;
             tmp = strchr(value, ':');
             if (tmp == NULL) 
 			{
-                DPRINTF("This host does not contain port, use 80 by default\n");
+                DEBUGPRINT("This host does not contain port, use 80 by default\n");
                 strcpy(host, value);
                 *port = 80;
                 continue;
@@ -651,7 +672,7 @@ void read_responeshdrs(int serv_fd, response_t* res)
     res->type = TYPE_MSC;
     res->length = 0;
 
-    DPRINTF("entering read res hdrs:%d\n", serv_fd);
+    DEBUGPRINT("entering read res hdrs:%d\n", serv_fd);
 
     while (1) 
 	{
@@ -757,9 +778,9 @@ bit_t* process_list(int serv_fd, int length)
     buf = (char *)malloc(length + 1);
     resvret = io_recvn_block(serv_fd, buf, length);
     if (resvret != length) 
-        DPRINTF("Short read occured while reading list, ret = %d\n", resvret);
+        DEBUGPRINT("Short read occured while reading list, ret = %d\n", resvret);
 	else 
-        DPRINTF("Successfully read list\n");
+        DEBUGPRINT("Successfully read list\n");
 
     bitrates = parse_xml(buf, length);
     free(buf);
@@ -789,14 +810,14 @@ void ask_for_nolist(int serv_fd, int clit_idx, int close)
         if (pool.www_ip) 
 		{
             inet_pton(AF_INET, pool.www_ip, &(sa.sin_addr));
-            DPRINTF("about to get conn\n");
+            DEBUGPRINT("about to get conn\n");
 
             
             serv_fd = open_server_socket(pool.fake_ip, pool.www_ip, 8080);
             serv_idx = add_server(serv_fd, sa.sin_addr.s_addr);
-            DPRINTF("new server:%d add!\n", serv_fd);
+            DEBUGPRINT("new server:%d add!\n", serv_fd);
             conn_idx = add_conn(clit_idx, serv_idx);
-            DPRINTF("new connection:%d add!\n", conn_idx);
+            DEBUGPRINT("new connection:%d add!\n", conn_idx);
     
         }
 		else 
@@ -804,14 +825,14 @@ void ask_for_nolist(int serv_fd, int clit_idx, int close)
             resolve(VIDEO_HOST, VIDEO_PORT, NULL, &servinfo);
             struct sockaddr_in* serv_addrin = (struct sockaddr_in*)servinfo->ai_addr;
             inet_ntop(AF_INET, &(serv_addrin->sin_addr), ip_str, sizeof(ip_str));
-            DPRINTF("Server IP resolved: %s\n", ip_str);
-            DPRINTF("about to get conn\n");
+            DEBUGPRINT("Server IP resolved: %s\n", ip_str);
+            DEBUGPRINT("about to get conn\n");
             
             serv_fd = open_server_socket(pool.fake_ip, ip_str, 8080);
             serv_idx = add_server(serv_fd,serv_addrin->sin_addr.s_addr);
-            DPRINTF("new server:%d add!\n",serv_fd);
+            DEBUGPRINT("new server:%d add!\n",serv_fd);
             conn_idx = add_conn(clit_idx, serv_idx);
-            DPRINTF("new connection:%d add!\n",conn_idx);
+            DEBUGPRINT("new connection:%d add!\n",conn_idx);
             
         }
         io_sendn(serv_fd, nolist_buf, strlen(nolist_buf));
